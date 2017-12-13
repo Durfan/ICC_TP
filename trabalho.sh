@@ -24,7 +24,7 @@ wc -l titles.all.tsv
 echo -e "\n----------- PROCESSAMENTO -----------\n"
 
 echo "01:sort \"titleType\" unicos"
-#Seleciona a coluna dois e pipe para organizar e selecionar os unicos na saida out1.txt
+#Seleciona a coluna dois e usa pipe para organizar/selecionar os unicos na saida out1.txt
 cut -f 2 titles.all.tsv | sort | uniq > out1.txt
 
 echo "02:if \"primaryTitle\" e \"originalTitle\" iguais"
