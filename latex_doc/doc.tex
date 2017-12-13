@@ -59,19 +59,24 @@ wc -l titles.all.tsv
 
 \section{Extrações}
 
-\emph{Descreva aqui quais itens foram feitos, quais não foram feitos e
-quais sua equipe não tem certeza da resposta. Explique os motivos.}
+\paragraph{}
+A extração dos itens 1,2,3,4,5,6,11 foram realizdas.
 
 \subsection*{Item 1}
 
-\emph{Discuta aqui cada comando utilizado para resolver o problema. O
-exemplo hipotético da seção de ``Entrada e saída'' da especificação
-poderia ser explicado da seguinte forma:}\\
-\emph{Para contar o número de itens do arquivo ``title.basics.tsv'' nós
-utilizamos o comando cat para imprimir o arquivo na saída padrão e
-utilizamos o comando wc (parâmetro -l) em cascata (pipe) para contar quantas 
-linhas foram impressas, resultando no total de linhas do arquivo
-``title.basics.tsv''.}
+\paragraph{}
+Utilizou-se ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção, em seguida outro pipe para ``uniq'' e com isso listar as entradas únicas dessa seleção como saída para o arquivo.
+
+\begin{table}[!htb]
+    \begin{tabular}{ c c c c }
+        \textsc{Entrada} & \textsc{cut -f 2} & \textsc{sort} & \textsc{uniq} \\ 
+        \hline
+        F A X & A & A & A \\ 
+        G B Y & B & A & B \\
+        H A Z & A & B & C \\
+        K C U & C & C &   \\
+    \end{tabular}
+\end{table}
 
 
 \subsection*{Item 2}
@@ -94,9 +99,9 @@ honestos.}
         \textsc{Membro}      & \textsc{Atividades} \\ 
 	    \hline
         Pablo Cecilio & pre-processamento; script.sh; item 1; documentação \\ 
-        Marco Antônio & ---  \\
-        Lucas Souza & ---  \\
-        Arthur Rocha & ---  \\
+        Marco Antônio & itens 2,3,4,5,6,11\\
+        Lucas Souza & --- \\
+        Arthur Rocha & --- \\
 
     \end{tabular}
 \end{table}
