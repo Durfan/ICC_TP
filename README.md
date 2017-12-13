@@ -25,6 +25,7 @@ $./trabalho.sh <INPUTDIR> <OUTPUTDIR>
 
 * [VIM](http://www.vim.org/) - text editor
 * [Visual Studio Code](https://code.visualstudio.com/) - code editor
+* [ShareLaTeX](https://pt.sharelatex.com) - editor LaTeX online
 * [Caffeine](https://en.wikipedia.org/wiki/Caffeine) - psychoactive drug
 
 ## Versioning
