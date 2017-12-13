@@ -1,4 +1,4 @@
-# Trabalho Final de Introdução a Ciência da Computação (2017/2)
+# Trabalho Final de ICC (2017/2)
 
 Extração e manuseio de base de dados através de programação em bash.
 
@@ -6,7 +6,7 @@ Extração e manuseio de base de dados através de programação em bash.
 
 ### Prerequisites
 
-* GNU Compiler Collection [GCC](https://gcc.gnu.org/)
+* default shell
 
 ### Installing
 
