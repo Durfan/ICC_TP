@@ -24,6 +24,7 @@ bash trabalho.sh <INPUT> <OUTPUT>
 ## Built With
 
 * [VIM](http://www.vim.org/) - text editor
+* [Visual Studio Code](https://code.visualstudio.com/) - code editor
 * [Caffeine](https://en.wikipedia.org/wiki/Caffeine) - psychoactive drug
 
 ## Versioning
