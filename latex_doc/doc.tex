@@ -32,30 +32,27 @@
 
 \section{Introdução}
 
-\emph{Introduza aqui o problema a ser tratado no trabalho. Não copie a
-introdução da especificação}
+\paragraph{}
+O trabalho consiste no processamento e manuseio entre bases de dados usando a programação em bash. Sendo esse processado através do uso de um script contendo os comandos necessários para executar diversas ações especificas entre as bases de dados originais, gerando a saída requisitada pelos itens abaixo descritos.
 
 \section{Pré-processamento}
 
-\paragraph{Afim de concatenar os dois arquivos foi utilizado o comando join, uma linha de comando que concatena linhas de dois arquivos através de uma coluna em comum.}
-
+\paragraph{}
+Afim de concatenar os dois arquivos foi utilizado o comando ``join'', uma linha de comando que concatena linhas de dois arquivos através de uma coluna em comum.
 \begin{minted}[breaklines]{bash}
-#!/bin/bash
-join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv title.basics.tsv > ../$OUTPUTDIR/titles.tsv
+join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv title.basics.tsv
 \end{minted}
 
-\paragraph{De modo a garantir que a saída estivves correta foi utilizado um wc -l comparando titles.ratings.tsv e o arvivo gerado titles.tsv.}
-
+\paragraph{}
+De modo a conferir se essa saída foi gerada corretamente, foi utilizado um ``wc -l'' comparando ``titles.ratings.tsv'' e o arvivo gerado ``titles.tsv''.
 \begin{minted}[breaklines]{bash}
-#!/bin/bash
 wc -l title.ratings.tsv
 wc -l titles.tsv
 \end{minted}
 
-\paragraph{Para finalizar o pre-processamento, o comando sed foi utilizado afim de remover a primeira linha do arquivo titles.tsv e gerar um novo arquivo, titles.all.tsv. Novamente a saída foi verificada com a contagem das respectivas linhas através do comando "wc -l".}
-
+\paragraph{}
+Para finalizar o pre-processamento, o comando ``sed'' foi utilizado afim de remover a primeira linha do arquivo ``titles.tsv'' para gerar um novo arquivo, ``titles.all.tsv''. Novamente a saída foi verificada com a contagem das respectivas linhas através do comando ``wc -l''.
 \begin{minted}[breaklines]{bash}
-#!/bin/bash
 sed '1d' titles.tsv > titles.all.tsv
 wc -l titles.all.tsv
 \end{minted}
@@ -117,7 +114,6 @@ da equipe durante o trabalho.}
     \centering
     \includegraphics[scale=0.3]{imagens/extra.jpg}
 \end{figure}
-
 
 
 \end{document}
