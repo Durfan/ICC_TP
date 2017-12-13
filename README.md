@@ -35,6 +35,7 @@ Ver [CHANGELOG.md](CHANGELOG.md) para mais detalhes.
 
 * **Pablo C.** - *need more coffee* - [Durfan](https://github.com/Durfan)
 * **Marco Antonio** - [MarcoACOL](https://github.com/MarcoACOL)
+* **Lucas Souza** - [lucas-mtz](https://github.com/lucas-mtz)
 
 ## License
 
