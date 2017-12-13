@@ -1,7 +1,10 @@
+#!/bin/bash
+
 IMDBDIR=$1
 OUTPUTDIR=$2
 
 #pre-processamento ---------------
+
 cd $IMDBDIR
 echo -e "\n---------- PRE-PROCESSAMENTO ----------\n"
 echo -e "#Linhas arquivos originais:"
