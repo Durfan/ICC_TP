@@ -41,5 +41,6 @@ Ver [CHANGELOG.md](CHANGELOG.md) para mais detalhes.
 
 MIT License - ver [LICENSE.md](LICENSE.md) para mais detalhes.
 
+***
 
 ![Bash](https://i.imgur.com/jl6o3s6.png)
