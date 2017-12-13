@@ -6,13 +6,13 @@ Extração e manuseio de base de dados através de programação em bash.
 
 ### Prerequisites
 
-* default shell
+* default Shell
 
 ### Installing
 
-Terminal:
+Shell:
 ```
-bash trabalho.sh <INPUT> <OUTPUT>
+$./trabalho.sh <INPUTDIR> <OUTPUTDIR>
 ```
 
 ## Deployment
