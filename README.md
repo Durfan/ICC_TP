@@ -12,7 +12,7 @@ Extração e manuseio de base de dados através de programação em bash.
 
 Shell:
 ```
-$./trabalho.sh <INPUTDIR> <OUTPUTDIR>
+$bash trabalho.sh <INPUTDIR> <OUTPUTDIR>
 ```
 
 ## Deployment
