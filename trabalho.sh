@@ -31,9 +31,21 @@ echo "01:sort \"titleType\" unicos"
 cut -f 2 titles.all.tsv | sort | uniq > out1.txt
 
 echo "02:if \"primaryTitle\" e \"originalTitle\" iguais"
+#Compara as colunas 2 e 3, se forem iguais aumenta o contador, cria arquivo out2.txt com o numero de title iguais
+awk -F"\t" '{if ($3 == $4) s += 1}END{print s}' titles.all.tsv > out2.txt
+
 echo "03:media das avaliacoes entre 1970 e 2000"
+#Compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas
+awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out3.txt
+
 echo "04:media das avaliacoes entre 2000 e 2016"
+#Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out4.txt a media das notas
+awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out4.txt
+
 echo "05:sort \"genres\" unicos existentes"
+#Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem ',' e '\N', organiza (com sort) por ordem alfabetica, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt
+cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | sort | uniq | wc -l > out5.txt
+
 echo "06:titulos classificados como \"Action\""
 echo "07:titulos \"Adventure\" produzidos desde 2005"
 echo "08:titulos \"Fantasy\" && \"Sci-Fi\" produzidos desde 2010"
