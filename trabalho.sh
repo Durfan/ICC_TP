@@ -47,11 +47,18 @@ echo "05:sort \"genres\" unicos existentes"
 cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | sort | uniq | wc -l > out5.txt
 
 echo "06:titulos classificados como \"Action\""
+#Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+cut -f9 titles.all.tsv|grep "Action"| wc -l > out6.txt
+
 echo "07:titulos \"Adventure\" produzidos desde 2005"
 echo "08:titulos \"Fantasy\" && \"Sci-Fi\" produzidos desde 2010"
 echo "09:razao de \"startYear=1970\" * total de titulos na base"
 echo "10:razao de \"startYear\" * total de titulos entre 1971 a 2016"
+
 echo "11:filmes com genero unico"
+#Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
+cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | wc -l
+
 echo "12:cinco \"genre\" com mais titulos"
 echo "13:media das avaliações por seus titulos--> \"genero resultado\""
 echo "14:media das avaliações por seus titulos--> \"genero resultado\" && \"numVotes\">100"
