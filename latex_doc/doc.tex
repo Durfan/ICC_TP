@@ -64,7 +64,11 @@ A extração dos itens 1, 2, 3, 4, 5, 6 e 11 foram realizdas.
 
 Utilizou-se ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção, em seguida outro pipe para ``uniq'' e com isso listar as entradas únicas dessa seleção como saída para o arquivo.
 
-\begin{table}[!htb]
+\begin{minted}[breaklines]{bash}
+cut -f 2 titles.all.tsv | sort | uniq > out1.txt
+\end{minted}
+
+\begin{table}[!h]
     \begin{tabular}{ c c c c }
         \textsc{Entrada} & \textsc{cut -f 2} & \textsc{sort} & \textsc{uniq} \\ 
         \hline
@@ -75,6 +79,60 @@ Utilizou-se ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse 
     \end{tabular}
 \end{table}
 
+\subsection*{Item 2}
+
+Foi utilizado o comando ``awk' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
+
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{if ($3 == $4) s += 1}END{print s}' titles.all.tsv > out2.txt
+\end{minted}
+
+\subsection*{Item 3}
+
+Atraves do comando awk compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas.
+
+Erro nos itens 3 e 4 por ter que colocar duas condições para uma mesma variável separadas.
+
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out3.txt
+\end{minted}
+
+\subsection*{Item 4}
+
+Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out4.txt a media das notas.
+
+Erro nos itens 3 e 4 por ter que colocar duas condições para uma mesma variável separadas.
+
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out4.txt
+\end{minted}
+
+\subsection*{Item 5}
+
+Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem `,' e `\textbackslash	N', organiza (com sort) por ordem alfabética, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt.
+
+Erro no item 5 sintaxe para usar o grep -v no \textbackslash N ter que utilizar duas \textbackslash .
+
+\begin{minted}[breaklines]{bash}
+cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | sort | uniq | wc -l > out5.txt
+\end{minted}
+
+\subsection*{Item 6}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+
+\begin{minted}[breaklines]{bash}
+cut -f9 titles.all.tsv|grep "Action"| wc -l > out6.txt
+\end{minted}
+
+\subsection*{Item 11}
+
+Separa a coluna 9, elimina as linhas que possuem `,' e `\textbackslash N' sobrando somente os generos unicos e conta as linhas com wc -l
+
+\begin{minted}[breaklines]{bash}
+cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | wc -l
+\end{minted}
+
 \section{Organização do trabalho}
 
 \emph{Explique nessa seção como o trabalho foi distribuído para o grupo.
@@ -82,7 +140,7 @@ Por exemplo, toda a equipe fez todos os itens junto ou as tarefas foram
 distribuídos para os membros da equipe? Crie uma tabela onde a linha é o
 nome do membro da equipe e a coluna são as atividades desempenhadas.}
 
-\begin{table}[!htb]
+\begin{table}[!h]
     \begin{tabular}{p{5cm}p{7.5cm}}
     
         \textsc{Membro}      & \textsc{Atividades} \\ 
