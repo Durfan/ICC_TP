@@ -37,20 +37,20 @@ O trabalho consiste no processamento e manuseio entre bases de dados usando a pr
 
 \section{Pré-processamento}
 
-Afim de concatenar os dois arquivos foi utilizado o comando ``join'', uma linha de comando que concatena linhas de dois arquivos através de uma coluna em comum.
+Para realizar as extrações solicitadas os dois arquivos ``title.basics.tsv'' e ``title.ratings.tsv'' foram processados utilizando o comando ``join'', que concatena linhas de dois arquivos através de uma coluna em comum.
 
 \begin{minted}[breaklines]{bash}
 join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv title.basics.tsv
 \end{minted}
 
-De modo a conferir se essa saída foi gerada corretamente, foi utilizado um ``wc -l'' comparando ``titles.ratings.tsv'' e o arvivo gerado ``titles.tsv''.
+De modo a conferir se a saída foi gerada corretamente, o comando ``wc -l'' foi executado ao final do processo para comparação visual de linhas entre os arquivos ``titles.ratings.tsv'' e o arvivo gerado ``titles.tsv''.
 
 \begin{minted}[breaklines]{bash}
 wc -l title.ratings.tsv
 wc -l titles.tsv
 \end{minted}
 
-Para finalizar o pre-processamento, o comando ``sed'' foi utilizado afim de remover a primeira linha do arquivo ``titles.tsv'' para gerar um novo arquivo, ``titles.all.tsv''. Novamente a saída foi verificada com a contagem das respectivas linhas através do comando ``wc -l''.
+Finalizando o pre-processamento, o comando ``sed'' foi utilizado para remover a primeira linha do arquivo ``titles.tsv'', e gerar um novo arquivo ``titles.all.tsv''. Novamente a saída foi verificada com a contagem das respectivas linhas através do comando ``wc -l''.
 
 \begin{minted}[breaklines]{bash}
 sed '1d' titles.tsv > titles.all.tsv
@@ -63,7 +63,10 @@ A extração dos itens 1, 2, 3, 4, 5, 6 e 11 foram realizdas.
 
 \subsection*{Item 1}
 
-Utilizou-se ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção, em seguida outro pipe para ``uniq'' e com isso listar as entradas únicas dessa seleção como saída para o arquivo.
+\noindent\emph{Liste os tipos de titulo (titleType) únicos existentes e imprima em ordem lexicográfica.}
+\vspace{1em}
+
+Para isso foi utilado o comando ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção e em seguida outro pipe para ``uniq'', para que com isso se pudesse listar as entradas únicas da seleção como saída para o arquivo.
 
 \begin{minted}[breaklines]{bash}
 cut -f 2 titles.all.tsv | sort | uniq > out1.txt
@@ -82,6 +85,9 @@ cut -f 2 titles.all.tsv | sort | uniq > out1.txt
 
 \subsection*{Item 2}
 
+\noindent\emph{Quantos títulos tem o primaryTitle e o originalTitle iguais?}
+\vspace{1em}
+
 Foi utilizado o comando ``awk' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
 
 \begin{minted}[breaklines]{bash}
@@ -89,6 +95,9 @@ awk -F"\t" '{if ($3 == $4) s += 1}END{print s}' titles.all.tsv > out2.txt
 \end{minted}
 
 \subsection*{Item 3}
+
+\noindent\emph{Qual a media das avaliações feitas entre os anos 1970 e 2000 (incluindo 1970 e 2000)? Imprima o resultado com 4 casas decimais.}
+\vspace{1em}
 
 Atraves do comando awk compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas.
 
@@ -115,7 +124,7 @@ Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem `,' e 
 Erro no item 5 sintaxe para usar o grep -v no \textbackslash N ter que utilizar duas \textbackslash .
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | sort | uniq | wc -l > out5.txt
+cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | sort | uniq | wc -l > out5.txt
 \end{minted}
 
 \subsection*{Item 6}
@@ -123,7 +132,7 @@ cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | sort | uniq | wc -l > out5.tx
 Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv|grep "Action"| wc -l > out6.txt
+cut -f9 titles.all.tsv | grep "Action"| wc -l > out6.txt
 \end{minted}
 
 \subsection*{Item 11}
@@ -131,7 +140,7 @@ cut -f9 titles.all.tsv|grep "Action"| wc -l > out6.txt
 Separa a coluna 9, elimina as linhas que possuem `,' e `\textbackslash N' sobrando somente os generos unicos e conta as linhas com wc -l
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv|grep -v ","|grep -v '\\N' | wc -l
+cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l
 \end{minted}
 
 \section{Organização do trabalho}
@@ -145,8 +154,8 @@ A comunicação imediata assim como o planejamento foi feito de forma mais infor
     
         \textsc{Membro}      & \textsc{Atividades} \\ 
 	    \hline
-        Pablo Cecilio & pré-processamento; script.sh; item 1; documentação \\ 
-        Marco Antônio & itens 2, 3, 4, 5, 6 e 11\\
+        Pablo Cecilio & pré-processamento; script.sh; itens 1, 7, 8; documentação \\ 
+        Marco Antônio & itens 2, 3, 4, 5, 6 e 11 \\
         Lucas Souza & --- \\
         Arthur Rocha & --- \\
 
