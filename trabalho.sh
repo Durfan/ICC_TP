@@ -44,42 +44,44 @@ extrai() {
     echo  ----------- EXTRACAO -----------
     echo
     echo -e "01: \$sort \"titleType\" unicos\n"
-    #Seleciona a coluna dois e usa pipe para organizar/selecionar os unicos na saida out1.txt
+    # Seleciona a coluna dois e usa pipe para organizar/selecionar os unicos na saida out1.txt
     cut -f 2 titles.all.tsv | sort | uniq | tee out1.txt
 
     echo -e "\n02: if \"primaryTitle\" e \"originalTitle\" iguais"
-    #Compara as colunas 2 e 3, se forem iguais aumenta o contador, cria arquivo out2.txt com o numero de title iguais
+    # Compara as colunas 2 e 3, se forem iguais aumenta o contador, cria arquivo out2.txt com o numero de title iguais
     awk -F"\t" '{if ($3 == $4) s += 1} END{print s}' titles.all.tsv | tee out2.txt
 
     echo -e "\n03: \$media das avaliacoes entre 1970 e 2000"
-    #Compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas
+    #C ompara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes,
+    # imprime em out3.txt a media das notas
     awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{print s/t}' titles.all.tsv | tee out3.txt
 
     echo -e "\n04: \$media das avaliacoes entre 2000 e 2016"
-    #Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out4.txt a media das notas
+    # Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes,
+    # imprime em out4.txt a media das notas
     awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{print s/t}' titles.all.tsv | tee out4.txt
 
-    echo -e "\n05: \$sort \"genres\" unicos existentes\n"
-    #Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem ',' e '\N', organiza (com sort) por ordem alfabetica, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt
-    ITEM5_EXISTEM[0]=$( cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | sort | uniq | tee out5.txt );
-    ITEM5_EXISTEM[1]=$( wc -l out5.txt );
-    echo ${ITEM5_EXISTEM[0]}
-    echo ${ITEM5_EXISTEM[1]} 
+    echo -e "\n05: \$sort \"genres\" unicos existentes"
+    # Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem ',' e '\N', organiza (com sort) por ordem alfabetica,
+    # elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt
+    cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5.txt
     
-    echo -e "\n06: \$titulos classificados como \"Action\"\n"
-    #Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
-    ITEM6_EXISTEM[0]=$( cut -f 9 titles.all.tsv | grep "Action" | tee out6.txt )
-    ITEM6_EXISTEM[1]=$( wc -l out6.txt )
-    echo ${ITEM6_EXISTEM[1]} 
+    echo -e "\n06: \$titulos classificados como \"Action\""
+    # Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+    cut -f 9 titles.all.tsv | grep "Action" | wc -l | tr -d ' ' | tee out6.txt
     
     echo -e "\n07: \$titulos \"Adventure\" produzidos desde 2005"
-    echo -e "08: \$titulos \"Fantasy\" && \"Sci-Fi\" produzidos desde 2010"
-    echo -e "09: \$razao de \"startYear=1970\" * total de titulos na base"
+    awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.tsv | wc -l | tr -d ' ' | tee out7.txt
+
+    echo -e "\n08: \$titulos \"Fantasy\" && \"Sci-Fi\" produzidos desde 2010"
+    awk -F"\t" '{if ($9 ~ /Fantasy,Sci-Fi/ && $9 ~ /Sci-Fi/ && $6 != "\\N" && $6 >= 2010) print $6,"\t",$9,"\t",$3}' titles.tsv | wc -l | tr -d ' ' | tee out8.txt
+
+    echo -e "\n09: \$razao de \"startYear=1970\" * total de titulos na base"
     echo -e "10: \$razao de \"startYear\" * total de titulos entre 1971 a 2016"
 
-    echo -e "\n11: filmes com genero unico\n"
-    #Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
-    cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tee out11.txt
+    echo -e "\n11: filmes com genero unico"
+    # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
+    cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11.txt
 
     echo -e "\n12: \$cinco \"genre\" com mais titulos"
     echo -e "13: \$media das avaliações por titulos > \"genero resultado\""
