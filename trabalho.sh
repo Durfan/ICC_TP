@@ -71,10 +71,10 @@ extrai() {
     cut -f 9 titles.all.tsv | grep "Action" | wc -l | tr -d ' ' | tee out6.txt
     
     echo -e "\n07: \$titulos \"Adventure\" produzidos desde 2005"
-    awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.all.tsv | wc -l | tr -d ' ' | tee out7.txt
+    awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out7.txt
 
     echo -e "\n08: \$titulos \"Fantasy\" && \"Sci-Fi\" produzidos desde 2010"
-    awk -F"\t" '{if ($9 ~ /Fantasy/ && $9 ~ /Sci-Fi/ && $6 != "\\N" && $6 >= 2010) print $6,"\t",$9,"\t",$3}' titles.all.tsv | wc -l | tr -d ' ' | tee out8.txt
+    awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8.txt
 
     echo -e "\n09: \$razao de \"startYear=1970\" * total de titulos na base"
     echo -e "10: \$razao de \"startYear\" * total de titulos entre 1971 a 2016"
