@@ -66,6 +66,9 @@ extrai() {
     START_TIME=$SECONDS
     clear
     cd $OUTPUTDIR
+    titulos=$(sed -n '$=' titles.all.tsv)
+    echo Total de Tiulos na Base: $titulos
+    echo
     echo  ----------- EXTRACAO -----------
     echo
     echo 01: \"titleType\" unicos
@@ -75,7 +78,7 @@ extrai() {
     echo 02: \"primaryTitle\" e \"originalTitle\" iguais
     awk -F"\t" '{if ($3 == $4) s += 1} END{print s}' titles.all.tsv | tee out2 # Compara as colunas 2 e 3, se forem iguais aumenta o contador, cria arquivo out2.txt com o numero de title iguais
     echo
-    echo 03: media das avaliacoes entre 1970 e 2000 
+    echo 03: media das avaliacoes entre 1970 e 2000
     awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3 # Compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas
     echo
     echo 04: media das avaliacoes entre 2000 e 2016  
@@ -92,9 +95,13 @@ extrai() {
     echo
     echo 08: titulos \"Fantasy\" e \"Sci-Fi\" produzidos desde 2010
     awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
-
-    echo -e "\n09: razao de \"startYear=1970\" * total de titulos na base"
-    echo -e "10: razao de \"startYear\" * total de titulos entre 1971 a 2016"
+    echo
+    echo 09: razao de \"startYear=1970\" pelo total de titulos na base
+    item9=$(awk -F"\t" '{if ($6 == 1970 && $6 != "\\N") print $6}' titles.all.tsv | wc -l | tr -d ' ')
+    media=$(bc <<< "scale=5;$item9 / $titulos")
+    echo $media | tee out9
+    echo
+    echo 10: razao de \"startYear\"=1971 a 2016 pelo total de titulos entre 1971 a 2016
 
     echo -e "\n11: filmes com genero unico"
     # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
@@ -131,6 +138,7 @@ imprime() {
     echo -n " Item 6: "; cat out6
     echo -n " Item 7: "; cat out7
     echo -n " Item 8: " ; cat out8
+    echo -n " Item 9: " ; cat out9
     echo -n "Item 11: "; cat out11
     cd ~-
     echo
