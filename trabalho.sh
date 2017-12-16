@@ -5,7 +5,7 @@ OUTPUTDIR=$2
 
 LOGO="ZEROUM - IMDB Extração e Manuseio"
 amenu="(1) Pre-Processamento";
-bmenu="(2) Verificar Pre-Processamento"; 
+bmenu="(2) Verificar PP"; 
 cmenu="(3) Extracao de dados";
 dmenu="(4) Extrair item 10";
 emenu="(5) Ver dados extraidos"; 
@@ -13,11 +13,21 @@ fmenu="(6) Ver dados item 10";
 
 invalida() { MSG="Opcao invalida..." ; }
 
-themenu () {
+logo() {
+    echo "   ___  __   ____________ _____  _    _ _    _ __  __ "
+    echo "  / _ \/_ | |___  /  ____|  __ \| |  | | |  | |  \\/  |"
+    echo " | | | || |    / /| |__  | |__) | |  | | |  | | \  / |"
+    echo " | | | || |   / / |  __| |  _  /| |  | | |  | | |\\/| |"
+    echo " | |_| || |  / /__| |____| | \ \\| |__| | |__| | |  | |"
+    echo "  \___/ |_| /_____|______|_|  \\_\\\____/ \____/|_|  |_|"
+    echo "                              IMDB Extracao e Manuseio"              
+}
+
+themenu() {
     clear
     echo `date`
     echo
-    echo -e $LOGO
+    logo
     echo
     echo -e $amenu
     echo -e $bmenu
@@ -25,17 +35,19 @@ themenu () {
     echo -e $dmenu
     echo -e $emenu
     echo -e $fmenu
-    echo -e "(7) Sair"
-    echo
-    echo $MSG
+    echo ----------------------
+    echo -e "(0) Sair"
     echo
     echo Digite a opcao e pressione ENTER ;
+    echo $MSG
 }
 
 pre() {
     START_TIME=$SECONDS
     clear
     cd $IMDBDIR
+    echo -e $LOGO
+    echo
     echo ---------- PRE-PROCESSAMENTO ----------
     echo
     echo "\$Concatenado arquivos..."
@@ -55,6 +67,8 @@ pre() {
 verifica() {
     clear
     cd $OUTPUTDIR
+    echo -e $LOGO
+    echo
     echo -e "#Linhas nos arquivos originais:"
     wc -l ../$IMDBDIR/title.basics.tsv
     wc -l ../$IMDBDIR/title.ratings.tsv
@@ -70,6 +84,8 @@ extrai() {
     START_TIME=$SECONDS
     clear
     cd $OUTPUTDIR
+    echo -e $LOGO
+    echo
     # titulos=$(sed -n '$=' titles.all.tsv)
     titulos=$(wc -l < titles.all.tsv | tr -d ' ')
     echo Total de Tiulos na Base: $titulos
@@ -130,17 +146,19 @@ extrai10() {
     START_TIME=$SECONDS
     clear
     cd $OUTPUTDIR
+    echo -e $LOGO
+    echo
     echo  ------- EXTRACAO ITEM 10 -------
     anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
     range=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
     echo Titulos produzidos no itervalo 1971-2016: $range
     for i in $anos;
         do
-        item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
-        media=$(echo "scale=5;$item10/$range" | bc)
-        # echo -e $i"\t"$item10"\t"$media
-        echo -e $i"\t"$media | tee -a out10
-    done
+            item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
+            media=$(echo "scale=5;$item10/$range" | bc)
+            # echo -e $i"\t"$item10"\t"$media
+            echo -e $i"\t"$media | tee -a out10
+        done
     echo
     ELAPSED_TIME=$(($SECONDS - $START_TIME))
     echo Tempo gasto na execucao: $ELAPSED_TIME"s"
@@ -154,10 +172,17 @@ extrai10() {
 imprime() {
     clear
     cd $OUTPUTDIR
+    echo -e $LOGO
+    echo
     echo " Item 1"
     echo ---------------
-    cat out1
+    cat out1 | column -t
     echo ---------------
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+    clear
+    echo -e $LOGO
+    echo
     echo -n " Item 2: " ; cat out2
     echo -n " Item 3: " ; cat out3
     echo -n " Item 4: " ; cat out4
@@ -175,6 +200,8 @@ imprime() {
 imprime10() {
     clear
     cd $OUTPUTDIR
+    echo -e $LOGO
+    echo
     echo " Item 10"
     echo ---------------
     echo ... 20 ultimos
@@ -198,7 +225,7 @@ while true
         4) extrai10;;
         5) imprime;;
         6) imprime10;;
-        7) break;;
+        0) break;;
         *) invalida;;
     esac
 done
