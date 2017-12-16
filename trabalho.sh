@@ -126,23 +126,27 @@ extrai() {
     echo
     
     echo 07: titulos \"Adventure\" produzidos desde 2005
-    # Procura pela coluna 9 a palavra Adventure dede que o ano nao tenha "\N" e seja maior ou igual a 2005, retorna o total de l
+    # Procura pela coluna 9 a palavra Adventure dede que o ano nao tenha "\N"
+    # e seja maior ou igual a 2005, retorna o total de l
     awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out7
     echo
     
     echo 08: titulos \"Fantasy\" e \"Sci-Fi\" produzidos desde 2010
-    # Procura pela coluna 9 a palavras Adventure ou Sci-Fi dede que o ano nao tenha "\N" e seja maior ou igual a 2010, retorna o total de l
+    # Procura pela coluna 9 a palavras Adventure ou Sci-Fi dede que o ano nao tenha "\N"
+    # e seja maior ou igual a 2010, retorna o total de l
     awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
     echo
     
     echo 09: razao de titulos com \"startYear=1970\" pelo total
-    # Atribiu a uma var o valor de linhas encontradas que possuam o ano igual 1970; divide var pelo total de titulos atraves de bc
+    # Atribiu a uma var o valor de linhas encontradas que possuam o ano igual 1970;
+    # divide var pelo total de titulos atraves de bc
     item9=$(awk -F"\t" '{if ($6 == 1970 && $6 != "\\N") print $6}' titles.all.tsv | wc -l | tr -d ' ')
     bc <<< "scale=5;$item9 / $titulos" | tee out9
     echo
     
     echo 11: filmes com genero unico
-    # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
+    # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando
+    #somente os generos unicos e conta as linhas com wc -l
     cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
     echo
 
