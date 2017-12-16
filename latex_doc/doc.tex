@@ -59,14 +59,14 @@ wc -l titles.all.tsv
 
 \section{Extrações}
 
-A extração dos itens 1, 2, 3, 4, 5, 6 e 11 foram realizdas.
+A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 e 16 foram realizadas.
 
 \subsection*{Item 1}
 
 \noindent\emph{Liste os tipos de titulo (titleType) únicos existentes e imprima em ordem lexicográfica.}
 \vspace{1em}
 
-Para isso foi utilado o comando ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção e em seguida outro pipe para ``uniq'', para que com isso se pudesse listar as entradas únicas da seleção como saída para o arquivo.
+Para isso foi utilizado o comando ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção e em seguida outro pipe para ``uniq'', para que com isso se pudesse listar as entradas únicas da seleção como saída para o arquivo.
 
 \begin{minted}[breaklines]{bash}
 cut -f 2 titles.all.tsv | sort | uniq > out1.txt
@@ -88,18 +88,20 @@ cut -f 2 titles.all.tsv | sort | uniq > out1.txt
 \noindent\emph{Quantos títulos tem o primaryTitle e o originalTitle iguais?}
 \vspace{1em}
 
-Foi utilizado o comando ``awk' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
+Foi utilizado o comando ``awk'' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
 
 \begin{minted}[breaklines]{bash}
 awk -F"\t" '{if ($3 == $4) s += 1}END{print s}' titles.all.tsv > out2.txt
 \end{minted}
 
+\clearpage
+
 \subsection*{Item 3}
 
-\noindent\emph{Qual a media das avaliações feitas entre os anos 1970 e 2000 (incluindo 1970 e 2000)? Imprima o resultado com 4 casas decimais.}
+\noindent\emph{Qual a media das avaliações feitas entre os anos 1970 e 2000?}
 \vspace{1em}
 
-Atraves do comando awk compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3.txt a media das notas.
+Atraves do comando awk compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3 a media das notas.
 
 Erro nos itens 3 e 4 por ter que colocar duas condições para uma mesma variável separadas.
 
@@ -108,6 +110,9 @@ awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}}END{print s/t}' title
 \end{minted}
 
 \subsection*{Item 4}
+
+\noindent\emph{Qual a media das avaliações feitas entre os anos 2000 e 2016?}
+\vspace{1em}
 
 Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out4.txt a media das notas.
 
@@ -119,6 +124,9 @@ awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}}END{print s/t}' title
 
 \subsection*{Item 5}
 
+\noindent\emph{Quantos gêneros (genres) únicos existem, sem considerar o marcador de nenhum gênero (``\textbackslash N'')?}
+\vspace{1em}
+
 Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem `,' e `\textbackslash	N', organiza (com sort) por ordem alfabética, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt.
 
 Erro no item 5 sintaxe para usar o grep -v no \textbackslash N ter que utilizar duas \textbackslash .
@@ -129,19 +137,60 @@ cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | sort | uniq | wc -l > out
 
 \subsection*{Item 6}
 
+\noindent\emph{Quantos títulos foram classificados como ação (Action)?}
+\vspace{1em}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+
+\subsection*{Item 7}
+
+\noindent\emph{Quantos títulos de aventura (Adventure) foram produzidos desde 2005 (startYear)?}
+\vspace{1em}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+
+\subsection*{Item 8}
+
+\noindent\emph{Quantos títulos de fantasia (Fantasy) e ficção (Sci-Fi) foram produzidos desde 2010?}
+\vspace{1em}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+
+\subsection*{Item 9}
+
+\noindent\emph{Obtenha a razão de títulos produzidos (startYear) em 1970 em relação ao total de títulos na base.}
+\vspace{1em}
+
 Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
 
 \begin{minted}[breaklines]{bash}
 cut -f9 titles.all.tsv | grep "Action"| wc -l > out6.txt
 \end{minted}
 
+\subsection*{Item 10}
+
+\noindent\emph{Obtenha a razão de títulos produzidos em cada ano (startYear) em relação ao total de títulos na base no intervalo de 1971 a 2016}
+\vspace{1em}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+
 \subsection*{Item 11}
+
+\noindent\emph{Quantos filmes tiveram apenas um único gênero?}
+\vspace{1em}
 
 Separa a coluna 9, elimina as linhas que possuem `,' e `\textbackslash N' sobrando somente os generos unicos e conta as linhas com wc -l
 
 \begin{minted}[breaklines]{bash}
 cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l
 \end{minted}
+
+\subsection*{Item 16}
+
+\noindent\emph{Imprima a razão de títulos, em relação ao total, que tenha duração (runtimeMinutes) entre 80 e 120 minutos (80 e 120 também são considerados).}
+\vspace{1em}
+
+Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
 
 \section{Organização do trabalho}
 
@@ -154,7 +203,7 @@ A comunicação imediata assim como o planejamento foi feito de forma mais infor
     
         \textsc{Membro}      & \textsc{Atividades} \\ 
 	    \hline
-        Pablo Cecilio & pré-processamento; script.sh; itens 1, 7, 8; documentação \\ 
+        Pablo Cecilio & pré-processamento; script.sh; itens 1, 7, 8, 9, 10, 16; documentação \\ 
         Marco Antônio & itens 2, 3, 4, 5, 6 e 11 \\
         Lucas Souza & --- \\
         Arthur Rocha & --- \\
