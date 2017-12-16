@@ -174,9 +174,8 @@ imprime() {
     cd $OUTPUTDIR
     echo -e $LOGO
     echo
-    echo " Item 1"
-    echo ---------------
-    cat out1 | column -t
+    echo -------- Item 1
+    cat out1
     echo ---------------
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
@@ -204,8 +203,8 @@ imprime10() {
     echo
     echo " Item 10"
     echo ---------------
-    echo ... 20 ultimos
-    tail -20 out10
+    echo ... 15 ultimos
+    tail -15 out10
     echo ---------------
     cd ~-
     echo
