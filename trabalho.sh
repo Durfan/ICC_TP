@@ -190,7 +190,8 @@ extrai10() {
     for i in $anos;
         do
             item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
-            echo -e -n $i"\t"; bc <<< "scale=5;$item10 / $range" | tee -a out10
+            media10=$(bc <<< "scale=5;$item10 / $range")
+            echo -e $i"\t"$media10 | tee -a out10
         done
     echo
     ELAPSED_TIME=$(($SECONDS - $START_TIME))
