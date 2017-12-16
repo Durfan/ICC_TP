@@ -158,8 +158,9 @@ extrai() {
     echo -e 16: razao de titulos com \"runtimeMinutes\" entre 80-120min pelo total
     # Atribiu a uma var o valor de linhas encontradas apos selecionar a coluna 8;
     # inverte a busca por "\N" e verificar de a duracao esta em 80-120
-    item16=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
-    bc <<< "scale=5;$item16 / $titulos" | tee out16
+    item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
+    item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N")
+    bc <<< "scale=5;$item16a / $item16b" | tee out16
     echo
 
     echo -e "17: dez \"Action\" melhor avaliados desde 2005 titleType=movie && numVotes>100"
