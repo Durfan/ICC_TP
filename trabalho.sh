@@ -3,7 +3,7 @@
 IMDBDIR=$1
 OUTPUTDIR=$2
 
-LOGO="ZEROUM - IMDB Extração e Manuseio"
+LOGO="\x1b[36mZEROUM - IMDB Extração e Manuseio\x1b[0m"
 amenu="(1) Pre-Processamento";
 bmenu="(2) Verificar PP"; 
 cmenu="(3) Extrair itens";
@@ -11,16 +11,16 @@ dmenu="(4) Extrair item 10";
 emenu="(5) Ver dados extraidos"; 
 fmenu="(6) Ver dados item 10";
 
-invalida() { MSG="Opcao invalida..." ; }
+invalida() { MSG="\x1b[31mOpcao invalida...\x1b[0m" ; }
 
 logo() {
-    echo "   ___  __   ____________ _____  _    _ _    _ __  __ "
+    echo -e "\x1b[33m   ___  __   ____________ _____  _    _ _    _ __  __ "
     echo "  / _ \/_ | |___  /  ____|  __ \| |  | | |  | |  \\/  |"
     echo " | | | || |    / /| |__  | |__) | |  | | |  | | \  / |"
     echo " | | | || |   / / |  __| |  _  /| |  | | |  | | |\\/| |"
     echo " | |_| || |  / /__| |____| | \ \\| |__| | |__| | |  | |"
-    echo "  \___/ |_| /_____|______|_|  \\_\\\____/ \____/|_|  |_|"
-    echo "                              IMDB Extracao e Manuseio"              
+    echo "  \___/ |_| /_____|______|_|  \\_\\\\____/ \\____/|_|  |_|"
+    echo -e "                              IMDB Extracao e Manuseio\x1b[0m"              
 }
 
 themenu() {
@@ -39,7 +39,7 @@ themenu() {
     echo -e "(0) Sair"
     echo
     echo Digite a opcao e pressione ENTER ;
-    echo $MSG
+    echo -e $MSG
 }
 
 pre() {
@@ -56,12 +56,11 @@ pre() {
     sed '1d' ../$OUTPUTDIR/titles.tsv > ../$OUTPUTDIR/titles.all.tsv
     cd ~-
     echo
-    ELAPSED_TIME=$(($SECONDS - $START_TIME))
-    echo Tempo gasto na execucao: $ELAPSED_TIME"s"
-    echo
     echo ------ FIM DO PRE-PROCESSAMENTO -------
+    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    echo -e "\n\x1b[36mTempo gasto na execucao: ${ELAPSED_TIME}s\x1b[0m"
     echo
-    read -n 1 -s -r -p "Arquivos concatenados. Pressione qualquer tecla para continuar..."
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 }
 
 verifica() {
@@ -165,13 +164,11 @@ extrai() {
 
     echo -e "17: dez \"Action\" melhor avaliados desde 2005 titleType=movie && numVotes>100"
     echo -e "18: cinco \"Comedy\" melhor avaliados com runtimeMinutes>200min\n"
-    echo
-    
-    ELAPSED_TIME=$(($SECONDS - $START_TIME))
-    echo Tempo gasto na execucao: $ELAPSED_TIME"s"
+    cd ~-
     echo
     echo -------- FIM DO EXTRACAO --------
-    cd ~-
+    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    echo -e "\n\x1b[36mTempo gasto na execucao: ${ELAPSED_TIME}s\x1b[0m"
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 }
@@ -194,12 +191,11 @@ extrai10() {
             media10=$(bc <<< "scale=5;$item10 / $range")
             echo -e $i"\t"$media10 | tee -a out10
         done
-    echo
-    ELAPSED_TIME=$(($SECONDS - $START_TIME))
-    echo Tempo gasto na execucao: $ELAPSED_TIME"s"
+    cd ~-
     echo
     echo -------- FIM DO EXTRACAO --------
-    cd ~-
+    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    echo -e "\n\x1b[36mTempo gasto na execucao: ${ELAPSED_TIME}s\x1b[0m"
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 }
