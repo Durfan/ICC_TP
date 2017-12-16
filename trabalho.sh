@@ -7,7 +7,9 @@ LOGO="ZEROUM - IMDB Extração e Manuseio"
 amenu="(1) Pre-Processamento";
 bmenu="(2) Verificar Pre-Processamento"; 
 cmenu="(3) Extracao de dados";
-dmenu="(4) Ver dados extraidos"; 
+dmenu="(4) Extrair item 10";
+emenu="(5) Ver dados extraidos"; 
+fmenu="(6) Ver dados item 10";
 
 invalida() { MSG="Opcao invalida..." ; }
 
@@ -21,7 +23,9 @@ themenu () {
     echo -e $bmenu
     echo -e $cmenu
     echo -e $dmenu
-    echo -e "(5) Sair"
+    echo -e $emenu
+    echo -e $fmenu
+    echo -e "(7) Sair"
     echo
     echo $MSG
     echo
@@ -66,7 +70,8 @@ extrai() {
     START_TIME=$SECONDS
     clear
     cd $OUTPUTDIR
-    titulos=$(sed -n '$=' titles.all.tsv)
+    # titulos=$(sed -n '$=' titles.all.tsv)
+    titulos=$(wc -l < titles.all.tsv | tr -d ' ')
     echo Total de Tiulos na Base: $titulos
     echo
     echo  ----------- EXTRACAO -----------
@@ -101,11 +106,8 @@ extrai() {
     media=$(bc <<< "scale=5;$item9 / $titulos")
     echo $media | tee out9
     echo
-    echo 10: razao de \"startYear\"=1971 a 2016 pelo total de titulos entre 1971 a 2016
-
-    echo -e "\n11: filmes com genero unico"
-    # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
-    cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
+    echo 11: filmes com genero unico
+    cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11 # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando somente os generos unicos e conta as linhas com wc -l
 
     echo -e "\n12: cinco generos com mais titulos"
     echo -e "13: media das avaliacoes por titulos > \"genero resultado\""
@@ -124,6 +126,31 @@ extrai() {
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 }
 
+extrai10() {
+    START_TIME=$SECONDS
+    clear
+    cd $OUTPUTDIR
+    echo  ------- EXTRACAO ITEM 10 -------
+    anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
+    range=$(awk -F"\t" '{if (($6 >= 1971 && $6 <= 2016) && $6 != "\\N") count++} END{print count}' titles.all.tsv)
+    echo Titulos produzidos no itervalo 1971-2016: $range
+    for i in $anos;
+        do
+        item10=$(awk -F"\t" '{if ($6 == '$i' && $6 != "\\N") count++} END{print count}' titles.all.tsv)
+        media=$(bc <<< "scale=5;$item10 / $range")
+        # echo -e $i"\t"$item10"\t"$media
+        echo -e $i"\t"$media | tee -a out10
+    done
+    echo
+    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    echo Tempo gasto na execucao: $ELAPSED_TIME"s"
+    echo
+    echo -------- FIM DO EXTRACAO --------
+    cd ~-
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+}
+
 imprime() {
     clear
     cd $OUTPUTDIR
@@ -131,15 +158,27 @@ imprime() {
     echo ---------------
     cat out1
     echo ---------------
-    echo -n " Item 2: "; cat out2
-    echo -n " Item 3: "; cat out3
-    echo -n " Item 4: "; cat out4
-    echo -n " Item 5: "; cat out5
-    echo -n " Item 6: "; cat out6
-    echo -n " Item 7: "; cat out7
+    echo -n " Item 2: " ; cat out2
+    echo -n " Item 3: " ; cat out3
+    echo -n " Item 4: " ; cat out4
+    echo -n " Item 5: " ; cat out5
+    echo -n " Item 6: " ; cat out6
+    echo -n " Item 7: " ; cat out7
     echo -n " Item 8: " ; cat out8
     echo -n " Item 9: " ; cat out9
-    echo -n "Item 11: "; cat out11
+    echo -n "Item 11: " ; cat out11
+    cd ~-
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+}
+
+imprime10() {
+    clear
+    cd $OUTPUTDIR
+    echo " Item 10"
+    echo ---------------
+    tail -50 out10
+    echo ---------------
     cd ~-
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
@@ -155,8 +194,10 @@ while true
         1) pre;;
         2) verifica;;
         3) extrai;;
-        4) imprime;;
-        5) break;;
+        4) extrai10;;
+        5) imprime;;
+        6) imprime10;;
+        7) break;;
         *) invalida;;
     esac
 done
