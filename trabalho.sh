@@ -132,12 +132,12 @@ extrai10() {
     cd $OUTPUTDIR
     echo  ------- EXTRACAO ITEM 10 -------
     anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
-    range=$(awk -F"\t" '{if (($6 >= 1971 && $6 <= 2016) && $6 != "\\N") count++} END{print count}' titles.all.tsv)
+    range=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
     echo Titulos produzidos no itervalo 1971-2016: $range
     for i in $anos;
         do
-        item10=$(awk -F"\t" '{if ($6 == '$i' && $6 != "\\N") count++} END{print count}' titles.all.tsv)
-        media=$(bc <<< "scale=5;$item10 / $range")
+        item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
+        media=$(echo "scale=5;$item10/$range" | bc)
         # echo -e $i"\t"$item10"\t"$media
         echo -e $i"\t"$media | tee -a out10
     done
@@ -177,7 +177,8 @@ imprime10() {
     cd $OUTPUTDIR
     echo " Item 10"
     echo ---------------
-    tail -50 out10
+    echo ... 20 ultimos
+    tail -20 out10
     echo ---------------
     cd ~-
     echo
