@@ -5,7 +5,7 @@ OUTPUTDIR=$2
 
 LOGO="\x1b[36mZEROUM - IMDB Extração e Manuseio v0.0.3\x1b[0m"
 amenu="(1) Pre-Processamento";
-bmenu="(2) Verificar PP"; 
+bmenu="(2) Verificar PP";
 cmenu="(3) Extrair itens";
 dmenu="(4) Extrair item 10";
 emenu="(5) Ver dados extraidos"; 
@@ -91,7 +91,7 @@ extrai() {
     echo
     echo  ----------- EXTRACAO -----------
     echo
-    
+
     echo 01: \"titleType\" unicos
     echo
     # Seleciona a coluna dois e usa pipe para organizar/selecionar os unicos na saida out1.txt
@@ -150,7 +150,7 @@ extrai() {
     
     echo 11: filmes com genero unico
     # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando
-    #somente os generos unicos e conta as linhas com wc -l
+    # somente os generos unicos e conta as linhas com wc -l
     cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
     echo
 
@@ -186,7 +186,7 @@ extrai10() {
     echo
     echo  ------- EXTRACAO ITEM 10 -------
     # atribui a uma var os anos de forma unica; realiza um laço que atribui uma var para os
-    # totais de titulos por anodivididos pelo total de titulos de um periodo
+    # totais de titulos por ano divididos pelo total de titulos de um periodo
     anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
     range=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
     echo Titulos produzidos no itervalo 1971-2016: $range
@@ -195,6 +195,7 @@ extrai10() {
             item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
             media10=$(bc <<< "scale=5;$item10 / $range")
             echo -e $i"\t"$media10 | tee -a out10
+            item10=
         done
     cd ~-
     echo
@@ -233,20 +234,6 @@ imprime() {
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 }
 
-imprime10() {
-    clear
-    cd $OUTPUTDIR
-    echo -e $LOGO
-    echo
-    echo " Item 10"
-    echo ---------------
-    echo ... 15 ultimos
-    tail -15 out10
-    echo ---------------
-    cd ~-
-    echo
-    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
-}
 
 MSG=
 while true
@@ -260,7 +247,7 @@ while true
         3) extrai;;
         4) extrai10;;
         5) imprime;;
-        6) imprime10;;
+        6) less $OUTPUTDIR/out10;;
         0) break;;
         *) invalida;;
     esac
