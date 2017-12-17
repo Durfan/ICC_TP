@@ -107,7 +107,7 @@ Por meio do comando ``awk'', comparou-se a coluna 6 com os valores 1970 a 2000, 
 awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
 \end{minted}
 
-Foi observado uma discrepância entre os valores gerados em sistemas diferentes, que foi atribuída a erros com operações com ponto flutuante devido a diferentes versões ou funções do bash. Como solução, um algorítimo foi acrescentado e comentado no script para corrigir por meio do uso de variáveis e um pipe para ``bc''.
+Foi observado uma discrepância entre os valores gerados em sistemas diferentes, que foi atribuída a erros com operações com ponto flutuante devido a diferentes versões ou funções do bash. Como solução, um algorítimo foi acrescentado de forma comentada no script para demonstrar a correção por meio do uso de variáveis e pelo comando ``bc''.
 
 \begin{minted}[breaklines]{bash}
 # soma=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){print $10}}' titles.all.tsv | paste -sd+ - | bc) 
