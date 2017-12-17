@@ -162,6 +162,7 @@ extrai() {
     echo
     
     echo -e "13: media das avaliacoes por titulos > \"genero resultado\""
+    # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -v '\\N'
     echo -e "14: media das avaliacoes por titulos > \"genero resultado\" && numVotes>100"
     echo -e "15: media das avaliacoes por tı́tulos > \"tipo resultado\"\n"
 
