@@ -175,7 +175,7 @@ extrai() {
     #    media13=$(bc <<< "scale=5;$item13 / $total13")
     #    echo -e $i"\t"$media13
     #    item13=
-    #   total13=
+    #    total13=
     #    media13=
     # done
     echo
