@@ -101,13 +101,13 @@ awk -F"\t" '{if ($3 == $4) s += 1} END{print s}' titles.all.tsv | tee out2
 
 \subsection*{Item 3}
 
-Atraves do comando ``awk'', comparou-se a coluna 6 com os valores 1970 a 2000, e para cada resultado positivo uma variável somava a nota dos títulos a um total, enquanto outra variável recebia a quantidade de filmes da condição. Ao final da execução, o total das notas foi dividido pela quantidade de títulos, obtendo-se a media.
+Por meio do comando ``awk'', comparou-se a coluna 6 com os valores 1970 a 2000, e para cada resultado positivo uma variável somava a nota dos títulos a um total, enquanto outra variável recebia a quantidade de filmes da condição. Ao final da execução, o total das notas foi dividido pela quantidade de títulos, obtendo-se a media.
 
 \begin{minted}[breaklines]{bash}
 awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
 \end{minted}
 
-Foi observado uma discrepância entre os valores gerados em sistemas diferentes, tal discrepância foi atribuída a erros com operações com ponto flutuante. Como solução, um algorítimo foi acrescentado e comentado no script para corrigir atraves do uso de variáveis e um pipe para ``bc''.
+Foi observado uma discrepância entre os valores gerados em sistemas diferentes, que foi atribuída a erros com operações com ponto flutuante devido a diferentes versões ou funções do bash. Como solução, um algorítimo foi acrescentado e comentado no script para corrigir por meio do uso de variáveis e um pipe para ``bc''.
 
 \begin{minted}[breaklines]{bash}
 # soma=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){print $10}}' titles.all.tsv | paste -sd+ - | bc) 
@@ -117,7 +117,7 @@ Foi observado uma discrepância entre os valores gerados em sistemas diferentes,
 
 \subsection*{Item 4}
 
-Segue a mesma logica e principio do item 3, apresentando a mesma solução e o mesmo erro relatado no item anterior.
+Segue a mesma lógica e princípio do item 3, apresentando a mesma solução e o mesmo erro relatado no item anterior.
 
 \begin{minted}[breaklines]{bash}
 awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out4
@@ -125,11 +125,11 @@ awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{printf("%.4f\n",
 
 \subsection*{Item 5}
 
-A coluna 9 do arquivo foi separada, e com uma inversão de busca (``grep -v'') eliminou-se as linhas que possuem `,' e `\textbackslash	N'. Após o pipe, a saída foi organizada (``sort'') por ordem alfabética e as entradas repetidas foram removidas com ``uniq'. Por fim o resultado foi gerado contando-se as linhas dessa saída.
+A coluna 9 do arquivo foi separada, e com uma inversão de busca (``grep -v'') eliminou-se as linhas que possuem `,' e `\textbackslash	N'. Após o pipe, a saída foi organizada (``sort'') por ordem alfabética e as entradas repetidas foram removidas com ``uniq'. Por fim, o resultado foi gerado contando-se as linhas dessa saída com o comando ``wc -l'', conforme o proposto.
 
 Diversos erros de  sintaxe foram apresentados no desenvolvimento ao usar o ``grep -v'' no \textbackslash N sem utilizar \textbackslash\textbackslash .
 
-Como detalhe, foi acrescentado um ``tr -d'' para cortar \textit{whitespaces} gerados pela saída do comando ``wc'' no macOS.
+Como detalhe a parte do proposto, foi acrescentado um ``tr -d'' para cortar \textit{whitespaces} gerados pela saída do comando ``wc'' no macOS. Esses espaços em branco eram antes gravados na saída. 
 
 \begin{minted}[breaklines]{bash}
 cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5 
@@ -137,7 +137,7 @@ cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr
 
 \subsection*{Item 6}
 
-Após a coluna 9 do arquivo ser separada, foi feita a busca pela \textit{string}  ``Action''. O resultado foi gerado ao contar as linhas desse saída.
+Utilizou-se ``cut -f 9'' para separar a coluna 9 da base de dados no arquivo, após essa ação, foi feita a busca pela \textit{string}  ``Action''. O resultado foi gerado ao contar as linhas desse saída.
 
 \begin{minted}[breaklines]{bash}
 cut -f 9 titles.all.tsv | grep "Action" | wc -l | tr -d ' ' | tee out6
@@ -153,7 +153,7 @@ awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t"
 
 \subsection*{Item 8}
 
-Usa a mesma logica apresentada no item 7, porém com condição e operadores lógicos diferentes para a solução.
+Usa a mesma lógica apresentada no item 7, porém, com condição e operadores lógicos diferentes para a solução.
 
 \begin{minted}[breaklines]{bash}
 awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
@@ -161,7 +161,7 @@ awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010
 
 \subsection*{Item 9}
 
-Uma variável foi utilizada para guardar o resultado gerado pela seleção e contagem de itens com o ano igual a 1970 (Contagem feita no mesmo procedimento de itens anteriores). Após o valor ter sido gerado, a razão foi obtida pela divisão desse valor pelo numero total de títulos na base já guardados em uma variável anterior no script . Para essa operação ``bc''  foi utilizado afim de gerar o numero de ponto flutuante.
+Uma variável foi utilizada para guardar o resultado gerado pela seleção e contagem de itens com o ano igual a 1970 (Contagem feita no mesmo procedimento de itens anteriores). Após o valor ter sido gerado, a razão foi obtida pela divisão desse valor pelo número total de títulos na base já guardados em uma variável anterior no script . Para essa operação ``bc''  foi utilizado a fim de gerar o número de ponto flutuante.
 
 \begin{minted}[breaklines]{bash}
 item9=$(awk -F"\t" '{if ($6 == 1970 && $6 != "\\N") print $6}' titles.all.tsv | wc -l | tr -d ' ')
@@ -172,7 +172,7 @@ bc <<< "scale=5;$item9 / $titulos" | tee out9
 
 Foi usada a mesma solução do item 9, porém um laço foi utilizado para gerar por cada ano a razão desse ano pelo total de títulos entre 1971 e 2016.
 
-Uma variável foi gerada para guardar cada ano a ser utilizado no laço, e esse usava o ano dessa variável afim de selecionar o total de títulos e obter a cada passagem a razão respectiva, já guardada em outra variável (``\$range'').
+Uma variável foi gerada para guardar cada ano a ser utilizado no laço, e esse usava o ano dessa variável a fim de selecionar o total de títulos e obter a cada passagem a razão respectiva, já guardada em outra variável (``\$range'').
 
 \begin{minted}[breaklines]{bash}
 anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
@@ -187,11 +187,11 @@ for i in $anos;
 	done
 \end{minted}
 
-Ha duvidas a respeito dos resultados gerados, mesmo esses sendo obtidos pelo ``bc''.
+Há dúvidas a respeito dos resultados gerados, mesmo esses sendo obtidos pelo comando ``bc''. Os números gerados por meio do laço não coincidem com o gabarito parcial do problema proposto.
 
 \subsection*{Item 11}
 
-Após separar a coluna de ``genres'', a busca por  ``,''  foi invertida gerando o total dado pelas contagem de linhas desse resultado. Como padrão, ``\textbackslash N'' também foi ignorado utilizando o mesmo método de busca invertida.
+Após separar a coluna de ``genres'', a busca por  ``,''  foi invertida gerando o total dado pelas contagem de linhas desse resultado. Como padrão, ``\textbackslash N'' também foi ignorado quando utilizado o mesmo método de busca invertida.
 
 \begin{minted}[breaklines]{bash}
 cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
@@ -199,7 +199,7 @@ cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee 
 
 \subsection*{Item 16}
 
-Utiliza a mesma logica apresentada nos itens 9 e 10 para gerar o resultado.
+Utiliza a mesma lógica apresentada nos itens 9 e 10 para gerar o resultado.
 
 \begin{minted}[breaklines]{bash}
 item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
@@ -209,9 +209,9 @@ bc <<< "scale=5;$item16a / $item16b" | tee out16
 
 \section{Organização do trabalho}
 
-O processo de colaboração do trabalho foi realizado e documentado utilizando o GitHub como plataforma. \url{https://github.com/Durfan/ICC_TP/}
+O processo de colaboração do trabalho foi realizado e documentado utilizando o \textit{GitHub} como plataforma. \url{https://github.com/Durfan/ICC_TP/}
 
-A comunicação imediata assim como o planejamento foi feito de forma mais informal através do WhatsApp. Sendo realizado através desse aplicativo a divisão e designação de tarefas por demanda ou por forma voluntaria.
+A comunicação imediata, assim como o planejamento, foi feito de forma mais informal por meio do \textit{WhatsApp}. Sendo realizado através desse aplicativo a divisão e designação de tarefas por demanda ou por forma voluntária.
 
 \begin{table}[!h]
     \begin{tabular}{p{5cm}p{7.5cm}}
@@ -230,9 +230,9 @@ A comunicação imediata assim como o planejamento foi feito de forma mais infor
 
 \section{Conclusão}
 
-A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo que a pesquisa realizada para resolver cada problema enunciado  foi feita na maior parte por soluções diversas encontradas em foruns e sites como o stackoverflow.com. Somando-se a isso, a maior dificuldade encontrada foi em relação a sintaxe dos comandos, esses que por sua vez variam na forma de suas expressões logicas e possuem particularidades tais como o uso de aspas simples ou duplas. Ex: O uso de \textit{regexp} para o comando egrep (grep -E), que podia realizar com exatidão metade das buscas enunciadas, porem sua implementação foi descartada por problemas na sintaxe não correspondendo a solução.
+A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo que a pesquisa realizada para resolver cada problema enunciado  foi feita na maior parte por soluções diversas encontradas em fóruns e sites como o stackoverflow.com. Somando-se a isso, a maior dificuldade encontrada foi em relação a sintaxe dos comandos, esses que por sua vez variam na forma de suas expressões lógicas e possuem particularidades tais como o uso de aspas simples ou duplas. Ex: O uso de \textit{regexp} para o comando egrep (grep -E), que podia realizar com exatidão metade das buscas enunciadas, porém, sua implementação foi descartada por problemas na sintaxe não correspondendo a solução.
 
-Durante o desenvolvimento também foram encontradas discrepâncias em sistemas diferentes com operações envolvendo ponto flutuante. Sendo que particularmente, algorítimos envolvendo divisões em sistemas 64bits retornam valores diferentes em relação a outros sistemas, diferindo do problema enunciado. Alem disso, o tempo de execução do script varia não apenas devido as especificações da maquina, mas também devido a diferentes versões do bash e ao modulo math incorporado.
+Durante o desenvolvimento também foram encontradas discrepâncias em sistemas diferentes com operações envolvendo ponto flutuante. Sendo que, particularmente, algorítimos envolvendo divisões em sistemas 64bits retornam valores diferentes em relação a outros sistemas, diferindo do problema enunciado. Além disso, o tempo de execução do script varia não apenas devido as especificações da máquina, mas também devido a diferentes versões do bash e ao módulo math incorporado.
 
 \pagebreak
 
