@@ -15,6 +15,8 @@
 \usepackage{xcolor}
 \usepackage{indentfirst}
 
+\setlength{\parskip}{1em}
+
 \sloppy
 
 %------------------------------------------------------------------------- 
@@ -33,27 +35,34 @@
 
 \section{Introdução}
 
-O trabalho consiste no processamento e manuseio entre bases de dados usando a programação em bash. Sendo esse processado através do uso de um script contendo os comandos necessários para executar diversas ações especificas entre as bases de dados originais, gerando a saída requisitada pelos itens abaixo descritos.
+O trabalho consiste no processamento e manuseio de uma base de dados usando a programação em bash.
+
+Para esse processamento foi utilizado um script contendo os comandos necessários para executar ações especificas requisitadas pelos itens abaixo descritos.
 
 \section{Pré-processamento}
 
-Para realizar as extrações solicitadas os dois arquivos ``title.basics.tsv'' e ``title.ratings.tsv'' foram processados utilizando o comando ``join'', que concatena linhas de dois arquivos através de uma coluna em comum.
+Para realizar as extrações solicitadas, os dois arquivos ``title.basics.tsv'' e ``title.ratings.tsv'' foram pré-processados utilizando o comando ``join'',  que concatena linhas de dois arquivos através de uma coluna em comum.
 
 \begin{minted}[breaklines]{bash}
-join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv title.basics.tsv
+join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv title.basics.tsv > ../$OUTPUTDIR/titles.tsv
 \end{minted}
 
-De modo a conferir se a saída foi gerada corretamente, o comando ``wc -l'' foi executado ao final do processo para comparação visual de linhas entre os arquivos ``titles.ratings.tsv'' e o arvivo gerado ``titles.tsv''.
+Após a execução do comando, o arquivo ``titles.tsv'' foi gerado na pasta de saída passada por argumento na chamada do script.
+
+Para finalizar o pre-processamento, o comando ``sed'' foi utilizado, removendo a primeira linha do arquivo ``titles.tsv'' e gerando um novo arquivo,``titles.all.tsv''. 
 
 \begin{minted}[breaklines]{bash}
-wc -l title.ratings.tsv
+sed '1d' ../$OUTPUTDIR/titles.tsv > ../$OUTPUTDIR/titles.all.tsv
+\end{minted}
+
+De modo a conferir se as saídas foram geradas corretamente, o comando ``wc -l'' foi executado ao final do processo para comparação de seus resultados com o numero de linhas entre os arquivos ``titles.ratings.tsv'' e o arquivos gerados, ``titles.tsv'' e ``titles.all.tsv''.
+
+\begin{minted}[breaklines]{bash}
+echo -e "#Linhas nos arquivos originais:"
+wc -l ../$IMDBDIR/title.basics.tsv
+wc -l ../$IMDBDIR/title.ratings.tsv
+echo -e "\n#Linhas nos arquivos gerados:"
 wc -l titles.tsv
-\end{minted}
-
-Finalizando o pre-processamento, o comando ``sed'' foi utilizado para remover a primeira linha do arquivo ``titles.tsv'', e gerar um novo arquivo ``titles.all.tsv''. Novamente a saída foi verificada com a contagem das respectivas linhas através do comando ``wc -l''.
-
-\begin{minted}[breaklines]{bash}
-sed '1d' titles.tsv > titles.all.tsv
 wc -l titles.all.tsv
 \end{minted}
 
@@ -63,13 +72,12 @@ A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 e 16 foram realizadas.
 
 \subsection*{Item 1}
 
-\noindent\emph{Liste os tipos de titulo (titleType) únicos existentes e imprima em ordem lexicográfica.}
-\vspace{1em}
+O comando ``cut'' foi utilizado para selecionar a segunda coluna em ``title.all.tsv''. Após essa ação, foi realizado um pipe para ``sort'' afim de ordenar essa seleção e em seguida outro pipe para ``uniq'', com isso listando as entradas únicas como saída para o arquivo ``out1''.
 
-Para isso foi utilizado o comando ``cut'' para selecionar a coluna 2 em ``title.all.tsv'', após esse comando foi realizado um pipe para um ``sort'' afim de ordenar a seleção e em seguida outro pipe para ``uniq'', para que com isso se pudesse listar as entradas únicas da seleção como saída para o arquivo.
+\pagebreak
 
 \begin{minted}[breaklines]{bash}
-cut -f 2 titles.all.tsv | sort | uniq > out1.txt
+cut -f 2 titles.all.tsv | sort | uniq | tee out1 
 \end{minted}
 
 \begin{table}[!h]
@@ -85,112 +93,119 @@ cut -f 2 titles.all.tsv | sort | uniq > out1.txt
 
 \subsection*{Item 2}
 
-\noindent\emph{Quantos títulos tem o primaryTitle e o originalTitle iguais?}
-\vspace{1em}
-
-Foi utilizado o comando ``awk'' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
+Utilizou-se o comando ``awk'' com uma variável como contador, essa por sua vez foi condicionada a aumentar seu valor caso as colunas 3 e 4 fossem iguais. A saída foi impressa em arquivo com o resultado da variável.
 
 \begin{minted}[breaklines]{bash}
-awk -F"\t" '{if ($3 == $4) s += 1}END{print s}' titles.all.tsv > out2.txt
+awk -F"\t" '{if ($3 == $4) s += 1} END{print s}' titles.all.tsv | tee out2
 \end{minted}
-
-\clearpage
 
 \subsection*{Item 3}
 
-\noindent\emph{Qual a media das avaliações feitas entre os anos 1970 e 2000?}
-\vspace{1em}
-
-Atraves do comando awk compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out3 a media das notas.
-
-Erro nos itens 3 e 4 por ter que colocar duas condições para uma mesma variável separadas.
+Atraves do comando ``awk'', comparou-se a coluna 6 com os valores 1970 a 2000, e para cada resultado positivo uma variável somava a nota dos títulos a um total, enquanto outra variável recebia a quantidade de filmes da condição. Ao final da execução, o total das notas foi dividido pela quantidade de títulos, obtendo-se a media.
 
 \begin{minted}[breaklines]{bash}
-awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out3.txt
+awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
+\end{minted}
+
+Foi observado uma discrepância entre os valores gerados em sistemas diferentes, tal discrepância foi atribuída a erros com operações com ponto flutuante. Como solução, um algorítimo foi acrescentado e comentado no script para corrigir atraves do uso de variáveis e um pipe para ``bc''.
+
+\begin{minted}[breaklines]{bash}
+# soma=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){print $10}}' titles.all.tsv | paste -sd+ - | bc) 
+# total=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){count++}} END{print count}' titles.all.tsv)
+# bc <<< "scale=10;$soma / $total"
 \end{minted}
 
 \subsection*{Item 4}
 
-\noindent\emph{Qual a media das avaliações feitas entre os anos 2000 e 2016?}
-\vspace{1em}
-
-Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes, imprime em out4.txt a media das notas.
-
-Erro nos itens 3 e 4 por ter que colocar duas condições para uma mesma variável separadas.
+Segue a mesma logica e principio do item 3, apresentando a mesma solução e o mesmo erro relatado no item anterior.
 
 \begin{minted}[breaklines]{bash}
-awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}}END{print s/t}' titles.all.tsv > out4.txt
+awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out4
 \end{minted}
 
 \subsection*{Item 5}
 
-\noindent\emph{Quantos gêneros (genres) únicos existem, sem considerar o marcador de nenhum gênero (``\textbackslash N'')?}
-\vspace{1em}
+A coluna 9 do arquivo foi separada, e com uma inversão de busca (``grep -v'') eliminou-se as linhas que possuem `,' e `\textbackslash	N'. Após o pipe, a saída foi organizada (``sort'') por ordem alfabética e as entradas repetidas foram removidas com ``uniq'. Por fim o resultado foi gerado contando-se as linhas dessa saída.
 
-Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem `,' e `\textbackslash	N', organiza (com sort) por ordem alfabética, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l e imprime o numero de linhas no out5.txt.
+Diversos erros de  sintaxe foram apresentados no desenvolvimento ao usar o ``grep -v'' no \textbackslash N sem utilizar \textbackslash\textbackslash .
 
-Erro no item 5 sintaxe para usar o grep -v no \textbackslash N ter que utilizar duas \textbackslash .
+Como detalhe, foi acrescentado um ``tr -d'' para cortar \textit{whitespaces} gerados pela saída do comando ``wc'' no macOS.
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | sort | uniq | wc -l > out5.txt
+cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5 
 \end{minted}
 
 \subsection*{Item 6}
 
-\noindent\emph{Quantos títulos foram classificados como ação (Action)?}
-\vspace{1em}
+Após a coluna 9 do arquivo ser separada, foi feita a busca pela \textit{string}  ``Action''. O resultado foi gerado ao contar as linhas desse saída.
 
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+\begin{minted}[breaklines]{bash}
+cut -f 9 titles.all.tsv | grep "Action" | wc -l | tr -d ' ' | tee out6
+\end{minted}
 
 \subsection*{Item 7}
 
-\noindent\emph{Quantos títulos de aventura (Adventure) foram produzidos desde 2005 (startYear)?}
-\vspace{1em}
+O retorno da saída foi gerado pelo ``awk'', que tinha como condição encontrar a \textit{string} ``Adventure'' na coluna 9 e o ano maior que 2005, ignorava as entradas com ``\textbackslash N''. Novamente foi usado o ``wc l'' como contador.
 
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out7
+\end{minted}
 
 \subsection*{Item 8}
 
-\noindent\emph{Quantos títulos de fantasia (Fantasy) e ficção (Sci-Fi) foram produzidos desde 2010?}
-\vspace{1em}
+Usa a mesma logica apresentada no item 7, porém com condição e operadores lógicos diferentes para a solução.
 
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
+\end{minted}
 
 \subsection*{Item 9}
 
-\noindent\emph{Obtenha a razão de títulos produzidos (startYear) em 1970 em relação ao total de títulos na base.}
-\vspace{1em}
-
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+Uma variável foi utilizada para guardar o resultado gerado pela seleção e contagem de itens com o ano igual a 1970 (Contagem feita no mesmo procedimento de itens anteriores). Após o valor ter sido gerado, a razão foi obtida pela divisão desse valor pelo numero total de títulos na base já guardados em uma variável anterior no script . Para essa operação ``bc''  foi utilizado afim de gerar o numero de ponto flutuante.
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv | grep "Action"| wc -l > out6.txt
+item9=$(awk -F"\t" '{if ($6 == 1970 && $6 != "\\N") print $6}' titles.all.tsv | wc -l | tr -d ' ')
+bc <<< "scale=5;$item9 / $titulos" | tee out9
 \end{minted}
 
 \subsection*{Item 10}
 
-\noindent\emph{Obtenha a razão de títulos produzidos em cada ano (startYear) em relação ao total de títulos na base no intervalo de 1971 a 2016}
-\vspace{1em}
+Foi usada a mesma solução do item 9, porém um laço foi utilizado para gerar por cada ano a razão desse ano pelo total de títulos entre 1971 e 2016.
 
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+Uma variável foi gerada para guardar cada ano a ser utilizado no laço, e esse usava o ano dessa variável afim de selecionar o total de títulos e obter a cada passagem a razão respectiva, ja guardada em outra variavel (``\$range'').
+
+\begin{minted}[breaklines]{bash}
+anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
+range=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
+echo Titulos produzidos no itervalo 1971-2016: $range
+for i in $anos;
+	do
+	item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
+	media10=$(bc <<< "scale=5;$item10 / $range")
+	echo -e $i"\t"$media10 | tee -a out10
+	item10=
+	done
+\end{minted}
+
+Ha duvidas a respeito dos resultados gerados, mesmo esses sendo obtidos pelo ``bc''.
 
 \subsection*{Item 11}
 
-\noindent\emph{Quantos filmes tiveram apenas um único gênero?}
-\vspace{1em}
-
-Separa a coluna 9, elimina as linhas que possuem `,' e `\textbackslash N' sobrando somente os generos unicos e conta as linhas com wc -l
+Após separar a coluna de ``genres'', a busca por  ``,''  foi invertida gerando o total dado pelas contagem de linhas desse resultado. Como padrão, ``\textbackslash N'' também foi ignorado utilizando o mesmo método de busca invertida.
 
 \begin{minted}[breaklines]{bash}
-cut -f9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l
+cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
 \end{minted}
 
 \subsection*{Item 16}
 
-\noindent\emph{Imprima a razão de títulos, em relação ao total, que tenha duração (runtimeMinutes) entre 80 e 120 minutos (80 e 120 também são considerados).}
-\vspace{1em}
+Utiliza a mesma logica apresentada nos itens 9 e 10 para gerar o resultado .
 
-Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas e printa o numero em out6.txt
+\begin{minted}[breaklines]{bash}
+item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
+item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N")
+bc <<< "scale=5;$item16a / $item16b" | tee out16
+\end{minted}
 
 \section{Organização do trabalho}
 
@@ -211,11 +226,16 @@ A comunicação imediata assim como o planejamento foi feito de forma mais infor
     \end{tabular}
 \end{table}
 
+\pagebreak
+
 \section{Conclusão}
 
-A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento(...)
+A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo a pesquisa realizada para resolver cada problema enunciado pelos itens propostos foi feita na maior parte por soluções diversas encontradas em foruns e sites como o stackoverflow.com. 
+
+Durante o desenvolvimento também foram encontradas discrepâncias em sistemas diferentes com operações envolvendo ponto flutuante atraves do comando ``bc''. Sendo que particularmente, algorítimos envolvendo divisões em sistemas 64bits retornam valores diferentes em relação a outros sistemas e pretendidos pelo enunciado. Alem disso, o tempo de execução do script varia não apenas devido as especificações da maquina, mas também devido a diferentes versões do bash e ao modulo math incorporado.
 
 \pagebreak
+
 \section{Extra}
 
 \begin{figure}[h]
