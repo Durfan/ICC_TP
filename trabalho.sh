@@ -158,11 +158,28 @@ extrai() {
     echo
 
     echo 12: cinco generos com mais titulos
-    cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq -c | sort -n -r | tr -d [:digit:] | tr -d ' ' | head -5 | tee out12
+    # Separa a coluna 9, troca ',' por '\n' separando as linhas com mais de um item
+	# faz a ordenação e a contagem de itens iguais, retira o item '\N' da contagem
+	# ordena em ordem decrescente e obtem os 5 primeiros itens
+	cut -f 9 titles.all.tsv | tr -s "," "\n" | sort | uniq -c | grep -v "\N" | sort -g -r | tr -d [:digit:] | tr -d ' ' | head -n 5 | tee out12
+    
+    # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq -c | sort -n -r | tr -d [:digit:] | tr -d ' ' | head -5 | tee out12
     echo
     
-    echo -e "13: media das avaliacoes por titulos > \"genero resultado\""
-    # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -v '\\N'
+    echo 13: media das avaliacoes por titulos > \"genero resultado\"
+    # generos=$(cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -v '\\N')
+    # for i in $generos;
+    # do
+    #    item13=$(awk -F"\t" -v pat="$i" '{if ($9 == pat){print $10}}' titles.all.tsv | paste -sd+ - | bc)
+    #    total13=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i)
+    #    media13=$(bc <<< "scale=5;$item13 / $total13")
+    #    echo -e $i"\t"$media13
+    #    item13=
+    #   total13=
+    #    media13=
+    # done
+    echo
+
     echo -e "14: media das avaliacoes por titulos > \"genero resultado\" && numVotes>100"
     echo -e "15: media das avaliacoes por tı́tulos > \"tipo resultado\"\n"
 
@@ -174,8 +191,16 @@ extrai() {
     bc <<< "scale=5;$item16a / $item16b" | tee out16
     echo
 
-    echo -e "17: dez \"Action\" melhor avaliados desde 2005 titleType=movie && numVotes>100"
-    echo -e "18: cinco \"Comedy\" melhor avaliados com runtimeMinutes>200min\n"
+    echo 17: dez \"Action\" melhor avaliados desde 2005 titleType=movie && numVotes>100
+	# Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 10 primeiros	
+	awk -F"\t" '{if(($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' title.all.tsv | sort -r -g -t $'\t' -k 2 | head -n 10 | tee out17
+	echo
+
+    echo 18: cinco \"Comedy\" melhor avaliados com runtimeMinutes>200min
+	# Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 5 primeiros	
+	awk -F"\t" '{ if (($2 ~ /movie/) && ($9 ~ /Comedy/) && ($11 > 100) && ($8 > 200)) print $3,"\t",$10}' titles.all.tsv | sort -r -g -t $'\t' -k 2 | head -n 5 | tee out18
+    echo
+
     cd ~-
     echo
     echo -------- FIM DO EXTRACAO --------
