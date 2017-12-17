@@ -157,7 +157,10 @@ extrai() {
     cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
     echo
 
-    echo -e "12: cinco generos com mais titulos"
+    echo 12: cinco generos com mais titulos
+    cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq -c | sort -n -r | tr -d [:digit:] | tr -d ' ' | head -5 | tee out12
+    echo
+    
     echo -e "13: media das avaliacoes por titulos > \"genero resultado\""
     echo -e "14: media das avaliacoes por titulos > \"genero resultado\" && numVotes>100"
     echo -e "15: media das avaliacoes por tı́tulos > \"tipo resultado\"\n"
