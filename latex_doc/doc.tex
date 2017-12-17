@@ -172,7 +172,7 @@ bc <<< "scale=5;$item9 / $titulos" | tee out9
 
 Foi usada a mesma solução do item 9, porém um laço foi utilizado para gerar por cada ano a razão desse ano pelo total de títulos entre 1971 e 2016.
 
-Uma variável foi gerada para guardar cada ano a ser utilizado no laço, e esse usava o ano dessa variável afim de selecionar o total de títulos e obter a cada passagem a razão respectiva, ja guardada em outra variavel (``\$range'').
+Uma variável foi gerada para guardar cada ano a ser utilizado no laço, e esse usava o ano dessa variável afim de selecionar o total de títulos e obter a cada passagem a razão respectiva, já guardada em outra variável (``\$range'').
 
 \begin{minted}[breaklines]{bash}
 anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
@@ -199,7 +199,7 @@ cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee 
 
 \subsection*{Item 16}
 
-Utiliza a mesma logica apresentada nos itens 9 e 10 para gerar o resultado .
+Utiliza a mesma logica apresentada nos itens 9 e 10 para gerar o resultado.
 
 \begin{minted}[breaklines]{bash}
 item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
@@ -230,9 +230,9 @@ A comunicação imediata assim como o planejamento foi feito de forma mais infor
 
 \section{Conclusão}
 
-A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo a pesquisa realizada para resolver cada problema enunciado pelos itens propostos foi feita na maior parte por soluções diversas encontradas em foruns e sites como o stackoverflow.com. 
+A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo que a pesquisa realizada para resolver cada problema enunciado  foi feita na maior parte por soluções diversas encontradas em foruns e sites como o stackoverflow.com. Somando-se a isso, a maior dificuldade encontrada foi em relação a sintaxe dos comandos, esses que por sua vez variam na forma de suas expressões logicas e possuem particularidades tais como o uso de aspas simples ou duplas. Ex: O uso de \textit{regexp} para o comando egrep (grep -E), que podia realizar com exatidão metade das buscas enunciadas, porem sua implementação foi descartada por problemas na sintaxe não correspondendo a solução.
 
-Durante o desenvolvimento também foram encontradas discrepâncias em sistemas diferentes com operações envolvendo ponto flutuante atraves do comando ``bc''. Sendo que particularmente, algorítimos envolvendo divisões em sistemas 64bits retornam valores diferentes em relação a outros sistemas e pretendidos pelo enunciado. Alem disso, o tempo de execução do script varia não apenas devido as especificações da maquina, mas também devido a diferentes versões do bash e ao modulo math incorporado.
+Durante o desenvolvimento também foram encontradas discrepâncias em sistemas diferentes com operações envolvendo ponto flutuante. Sendo que particularmente, algorítimos envolvendo divisões em sistemas 64bits retornam valores diferentes em relação a outros sistemas, diferindo do problema enunciado. Alem disso, o tempo de execução do script varia não apenas devido as especificações da maquina, mas também devido a diferentes versões do bash e ao modulo math incorporado.
 
 \pagebreak
 
