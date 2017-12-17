@@ -106,6 +106,11 @@ extrai() {
     echo 03: media das avaliacoes entre 1970 e 2000
     # Compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes
     awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
+
+    # Solucao para o erro no ponto flutuante em bash no macOS
+    # soma=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){count++;print $10}} END{total=$count}' titles.all.tsv | paste -sd+ - | bc) 
+    # total=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){count++}} END{print count}' titles.all.tsv)
+    # bc <<< "scale=10;$soma / $total"
     echo
     
     echo 04: media das avaliacoes entre 2000 e 2016
