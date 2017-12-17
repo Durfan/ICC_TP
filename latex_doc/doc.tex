@@ -68,7 +68,7 @@ wc -l titles.all.tsv
 
 \section{Extrações}
 
-A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 e 16 foram realizadas.
+A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17 e 18 foram realizadas.
 
 \subsection*{Item 1}
 
@@ -197,6 +197,24 @@ Após separar a coluna de ``genres'', a busca por  ``,''  foi invertida gerando 
 cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
 \end{minted}
 
+\subsection*{Item 12}
+
+Por meio de ``cut'',  separo-se a coluna 9. Após essa ação, o comando ``tr''  foi usado para trocar as ``,'' por  ``\textbackslash n'', separando assim as linhas que possuíam mais de um gênero.  Logo após a ordenação dos itens através do ``sort'', o ``uniq -c'' foi  foi usado para a contagem de itens iguais.
+
+Para a finalizar a extração, uma busca invertida foi usada em ``\textbackslash N'' , com a saída desse comando sendo ordenada com o ``sort'' reverso através do pipe.
+
+\begin{minted}[breaklines]{bash}
+cut -f 9 titles.all.tsv | tr -s "," "\n" | sort | uniq -c | grep -v "\N" | sort -g -r | tr -d [:digit:] | tr -d ' ' | head -n 5 | tee out12
+\end{minted}
+
+\textit{Nota: Para fins de formatação foi acrescentado o codigo abaixo, que remove os números e espaços da saída.}
+
+\begin{minted}[breaklines]{bash}
+tr -d [:digit:] | tr -d ' '
+\end{minted}
+
+\pagebreak
+
 \subsection*{Item 16}
 
 Utiliza a mesma lógica apresentada nos itens 9 e 10 para gerar o resultado.
@@ -205,6 +223,24 @@ Utiliza a mesma lógica apresentada nos itens 9 e 10 para gerar o resultado.
 item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
 item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N")
 bc <<< "scale=5;$item16a / $item16b" | tee out16
+\end{minted}
+
+\subsection*{Item 17}
+
+Foi usado o condicionamento no ``awk'' para gerar uma saída a fim de ordena-la com ``sort'' pelo parâmetro da segunda coluna. Por fim, o comando ``head'' foi utilizado para listar os dez primeiros itens da saída 
+
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{if(($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' titles.all.tsv | sort -r -g -t$'\t' -k2 | head -n 10 | tr '\t' ' ' | tee out17
+\end{minted}
+
+\textit{Nota: Usou-se ``tr'' para a retirada de espaços para o pipe no arquivo de saída.}
+
+\subsection*{Item 18}
+
+Usa a mesma lógica apresentada no item 17, porém, com condição e operadores lógicos diferentes para a solução.
+
+\begin{minted}[breaklines]{bash}
+awk -F"\t" '{ if (($2 ~ /movie/) && ($9 ~ /Comedy/) && ($11 > 100) && ($8 > 200)) print $3,"\t",$10}' titles.all.tsv | sort -r -g -t$'\t' -k2 |  head -n 5 | tr '\t' ' ' | tee out18
 \end{minted}
 
 \section{Organização do trabalho}
