@@ -121,7 +121,10 @@ extrai() {
     echo 05: generos unicos
     # Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem ',' e '\N', organiza (com sort)
     # por ordem alfabetica, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l
-    cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5 
+    cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5
+
+    # Patch para correcao da resposta
+    # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -v '\\N' | wc -l | tr -d ' '
     echo
     
     echo 06: titulos classificados como \"Action\"
