@@ -49,6 +49,8 @@ join -t $'\t' -o 2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,1.2,1.3 title.ratings.tsv t
 
 Após a execução do comando, o arquivo ``titles.tsv'' foi gerado na pasta de saída passada por argumento na chamada do script.
 
+\pagebreak
+
 Para finalizar o pre-processamento, o comando ``sed'' foi utilizado, removendo a primeira linha do arquivo ``titles.tsv'' e gerando um novo arquivo,``titles.all.tsv''. 
 
 \begin{minted}[breaklines]{bash}
@@ -68,7 +70,7 @@ wc -l titles.all.tsv
 
 \section{Extrações}
 
-A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17 e 18 foram realizadas.
+A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17 e 18 foram realizadas. Algumas extrações diferem do gabarito parcial, são elas: itens 10 e 16. Existem duvidas quanto a precisão das saídas dos itens 3, 4 e 5.
 
 \subsection*{Item 1}
 
@@ -262,8 +264,6 @@ A comunicação imediata, assim como o planejamento, foi feito de forma mais inf
     \end{tabular}
 \end{table}
 
-\pagebreak
-
 \section{Conclusão}
 
 A falta de uma documentação bash didática e menos técnica dificultou e atrasou o desenvolvimento, sendo que a pesquisa realizada para resolver cada problema enunciado  foi feita na maior parte por soluções diversas encontradas em fóruns e sites como o stackoverflow.com. Somando-se a isso, a maior dificuldade encontrada foi em relação a sintaxe dos comandos, esses que por sua vez variam na forma de suas expressões lógicas e possuem particularidades tais como o uso de aspas simples ou duplas. Ex: O uso de \textit{regexp} para o comando egrep (grep -E), que podia realizar com exatidão metade das buscas enunciadas, porém, sua implementação foi descartada por problemas na sintaxe não correspondendo a solução.
@@ -278,6 +278,8 @@ Durante o desenvolvimento também foram encontradas discrepâncias em sistemas d
     \centering
     \includegraphics[width=65mm]{imagens/pablo.jpg}
     \includegraphics[width=65mm]{imagens/marco.jpg}
+    \includegraphics[width=65mm]{imagens/lucas.jpg}
+    \includegraphics[width=65mm]{imagens/blank.jpg}
 \end{figure}
 
 
