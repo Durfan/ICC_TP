@@ -171,13 +171,10 @@ extrai() {
     # generos=$(cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq | sort | tr -d [:digit:] | tr -d ' ')
     # for i in $generos;
     # do
-    #    item13=$(awk -F"\t" -v pat="$i" '{if ($9 == pat){print $10}}' titles.all.tsv | paste -sd+ - | bc)
-    #    total13=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i)
-    #    media13=$(bc <<< "scale=5;$item13/$total13")
-    #    echo -e $i" "$media13 | tee -a out13
-    #    item13=
-    #    total13=
-    #    media13=
+    #    item13=$(awk -F"\t" -v pat="$i" '{if ($9 == pat){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+    #    total13=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i);
+    #    media13=$(bc <<< "scale=5;$item13 / $total13");
+    #    echo -e $i" "$media13 | tee -a out13;
     # done
 
     echo -e "14: media das avaliacoes por titulos > \"genero resultado\" && numVotes>100"
@@ -186,9 +183,9 @@ extrai() {
     echo -e 16: razao de titulos com \"runtimeMinutes\" entre 80\-120min pelo total
     # Atribiu a uma var o valor de linhas encontradas apos selecionar a coluna 8;
     # inverte a busca por "\N" e verificar de a duracao esta em 80-120
-    item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ')
-    item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N")
-    bc <<< "scale=5;$item16a / $item16b" | tee out16
+    item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ');
+    item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N");
+    bc <<< "scale=5;$item16a / $item16b" | tee out16;
     echo
 
     echo 17: top 10 \"Action\" melhor avaliados desde 2005
@@ -226,10 +223,9 @@ extrai10() {
     echo Titulos produzidos no itervalo 1971-2016: $range
     for i in $anos;
         do
-            item10=$(cut -f 6 titles.all.tsv | grep -c "$i")
-            media10=$(bc <<< "scale=5;$item10/$range")
-            echo -e $i"\t"$media10 | tee -a out10
-            item10=
+            item10=$(cut -f 6 titles.all.tsv | grep -c "$i");
+            media10=$(bc <<< "scale=5;$item10 / $range");
+            echo -e $i"\t"$media10 | tee -a out10;
         done
     cd ~-
     echo
