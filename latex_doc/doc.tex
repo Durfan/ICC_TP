@@ -72,11 +72,11 @@ wc -l titles.all.tsv
 
 A extração dos itens 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17 e 18 foram realizadas. Algumas extrações diferem do gabarito parcial, são elas: itens 10 e 16. Existem duvidas quanto a precisão das saídas dos itens 3, 4 e 5.
 
+Itens 13, 14 e 15 não tiveram uma solução definitiva para a extração. A solução que foi alcançada no desenvolvimento apresenta valores diferentes do esperado.
+
 \subsection*{Item 1}
 
 O comando ``cut'' foi utilizado para selecionar a segunda coluna em ``title.all.tsv''. Após essa ação, foi realizado um pipe para ``sort'' afim de ordenar essa seleção e em seguida outro pipe para ``uniq'', com isso listando as entradas únicas como saída para o arquivo ``out1''.
-
-\pagebreak
 
 \begin{minted}[breaklines]{bash}
 cut -f 2 titles.all.tsv | sort | uniq | tee out1 
@@ -215,7 +215,20 @@ cut -f 9 titles.all.tsv | tr -s "," "\n" | sort | uniq -c | grep -v "\N" | sort 
 tr -d [:digit:] | tr -d ' '
 \end{minted}
 
-\pagebreak
+\subsection*{Itens 13, 14 e 15}
+
+A solução parcial desses itens que seguem a mesma lógica para extração, não obteve os resultados esperados. A media obtida pelo laço foi consideravelmente diferente do esperado e do gabarito parcial. Abaixo segue o codigo desenvolvido para a solução dessas extrações.
+
+\begin{minted}[breaklines]{bash}
+# generos=$(cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq | sort | tr -d [:digit:] | tr -d ' ')
+# for i in $generos;
+# do
+#    item13=$(awk -F"\t" -v pat="$i" '{if ($9 == pat){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+#    total13=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i);
+#    media13=$(bc <<< "scale=5;$item13 / $total13");
+#    echo -e $i" "$media13 | tee -a out13;
+# done
+\end{minted}
 
 \subsection*{Item 16}
 
@@ -258,7 +271,7 @@ A comunicação imediata, assim como o planejamento, foi feito de forma mais inf
 	    \hline
         Pablo Cecilio & pré-processamento; script.sh; itens 1, 7, 8, 9, 10, 16; documentação \\ 
         Marco Antônio & itens 2, 3, 4, 5, 6 e 11 \\
-        Lucas Souza & itens 12, 17 e 18 \\
+        Lucas Souza & itens 12, 13, 17 e 18 \\
         Arthur Rocha & --- \\
 
     \end{tabular}
