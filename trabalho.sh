@@ -105,50 +105,55 @@ extrai() {
     
     echo 03: media das avaliacoes entre 1970 e 2000
     # Compara se a coluna 6 está entre os valores (1970 a 2000), recebe em s a nota do filme, e em t a quantidade de filmes
-    awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
+    # awk -F"\t" '{if (1969 < $6  && $6 < 2001){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out3
 
     # Solucao para o erro no ponto flutuante em bash no macOS
-    # soma=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){print $10}}' titles.all.tsv | paste -sd+ - | bc) 
-    # total=$(awk -F"\t" '{if ($6>=1970 && $6<=2000){count++}} END{print count}' titles.all.tsv)
-    # bc <<< "scale=10;$soma / $total"
+    numerador=$(awk -F"\t" '{if (($6>=1970 && $6<=2000) && $6 !="\\N") {print $10}}' titles.all.tsv | paste -sd+ - | bc) 
+    denominador=$(cut -f 6 titles.all.tsv | awk '$NF >= 1970 && $NF <= 2000' | wc -l | tr -d ' ')
+    bc <<< "scale=4;$numerador / $denominador" | tee out3
     echo
     
     echo 04: media das avaliacoes entre 2000 e 2016
     # Compara se a coluna 6 está entre os valores (2000 a 2016), recebe em s a nota do filme, e em t a quantidade de filmes
-    awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out4
+    # awk -F"\t" '{if (1999 < $6  && $6 < 2017){s += $10; t+= 1}} END{printf("%.4f\n", s/t)}' titles.all.tsv | tee out4
+
+    # Solucao para o erro no ponto flutuante em bash no macOS
+    numerador=$(awk -F"\t" '{if ($6>=1999 && $6<=2017){print $10}}' titles.all.tsv | paste -sd+ - | bc) 
+    denominador=$(cut -f 6 titles.all.tsv | awk '$NF >= 2000 && $NF <= 2016' | wc -l | tr -d ' ')
+    bc <<< "scale=4;$numerador / $denominador" | tee out4
     echo
     
     echo 05: generos unicos
     # Separa a coluna 9 do arquivo, elimina (com grep -v) as linhas que possuem ',' e '\N', organiza (com sort)
     # por ordem alfabetica, elimina (com uniq) as entradas repetidas, conta as linhas com wc -l
-    cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5
+    # cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5
 
     # Patch para correcao da resposta
-    # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -v '\\N' | wc -l | tr -d ' '
+    cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -c -v '\\N'
     echo
     
     echo 06: titulos classificados como \"Action\"
     # Separa a coluna 9 do arquivo, separa todas linhas que possuem a palavra Action, conta as linhas
-    cut -f 9 titles.all.tsv | grep "Action" | wc -l | tr -d ' ' | tee out6
+    cut -f 9 titles.all.tsv | grep -c "Action" | tee out6
     echo
     
     echo 07: titulos \"Adventure\" produzidos desde 2005
     # Procura pela coluna 9 a palavra Adventure dede que o ano nao tenha "\N"
     # e seja maior ou igual a 2005, retorna o total de l
-    awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005 {print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out7
+    awk -F"\t" '$9 ~ /Adventure/ && $6 != "\\N" && $6 >= 2005' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out7
     echo
     
     echo 08: titulos \"Fantasy\" e \"Sci-Fi\" produzidos desde 2010
     # Procura pela coluna 9 a palavras Adventure ou Sci-Fi dede que o ano nao tenha "\N"
     # e seja maior ou igual a 2010, retorna o total de l
-    awk -F"\t" '{if (($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)) print $6,"\t",$9,"\t",$3}' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
+    awk -F"\t" '($9 ~ /Fantasy/ || $9 ~ /Sci-Fi/) && ($6 != "\\N" && $6 >= 2010)' titles.all.tsv | sort | wc -l | tr -d ' ' | tee out8
     echo
     
     echo 09: razao de titulos com \"startYear=1970\" pelo total
     # Atribiu a uma var o valor de linhas encontradas que possuam o ano igual 1970;
     # divide var pelo total de titulos atraves de bc
-    item9=$(awk -F"\t" '{if ($6 == 1970 && $6 != "\\N") print $6}' titles.all.tsv | wc -l | tr -d ' ')
-    bc <<< "scale=5;$item9 / $titulos" | tee out9
+    numerador=$(cut -f 6 titles.all.tsv | grep -c "1970")
+    bc <<< "scale=5;$numerador / $titulos" | tee out9
     echo
     
     echo 11: filmes com genero unico
@@ -162,7 +167,7 @@ extrai() {
     # Separa a coluna 9, troca ',' por '\n' separando as linhas com mais de um item
 	# faz a ordenação e a contagem de itens iguais, retira o item '\N' da contagem
 	# ordena em ordem decrescente e obtem os 5 primeiros itens
-	cut -f 9 titles.all.tsv | tr -s "," "\n" | sort | uniq -c | grep -v "\N" | sort -g -r | tr -d [:digit:] | tr -d ' ' | head -n 5 | tee out12
+	cut -f 9 titles.all.tsv | tr -s "," "\n" | grep -v "\N" | sort | uniq -c | sort -n -r | tr -d [:digit:]' ' | head -n 5 | tee out12
     
     # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq -c | sort -n -r | tr -d [:digit:] | tr -d ' ' | head -5 | tee out12
     echo
@@ -191,7 +196,7 @@ extrai() {
     echo 17: top 10 \"Action\" melhor avaliados desde 2005
     echo
 	# Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 10 primeiros	
-	awk -F"\t" '{if(($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' titles.all.tsv | sort -r -g -t$'\t' -k2 | head -n 10 | tr '\t' ' ' | tee out17
+	awk -F"\t" '{if(($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' titles.all.tsv | sort -r -n -t$'\t' -k2 | head -n 10 | tr '\t' ' ' | tee out17
 	echo
 
     echo 18: top 5 \"Comedy\" melhor avaliados
@@ -218,13 +223,13 @@ extrai10() {
     echo  ------- EXTRACAO ITEM 10 -------
     # atribui a uma var os anos de forma unica; realiza um laço que atribui uma var para os
     # totais de titulos por ano divididos pelo total de titulos de um periodo
-    anos=$(cut -f 6 titles.all.tsv | sort | uniq | sed '$d')
-    range=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
+    anos=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | sort | uniq)
+    denominador=$(cut -f 6 titles.all.tsv | grep -v '\\N'| sort -n | awk '$NF >= 1971 && $NF <= 2016' | wc -l | tr -d ' ')
     echo Titulos produzidos no itervalo 1971-2016: $range
     for i in $anos;
         do
-            item10=$(cut -f 6 titles.all.tsv | grep -c "$i");
-            media10=$(bc <<< "scale=5;$item10 / $range");
+            numerador=$(cut -f 6 titles.all.tsv | grep -c "$i");
+            media=$(bc <<< "scale=5;$item10 / $denominador");
             echo -e $i"\t"$media10 | tee -a out10;
         done
     cd ~-
