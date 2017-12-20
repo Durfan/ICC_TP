@@ -156,7 +156,6 @@ extrai() {
     echo
     rm -f out10
     anos=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | sort | uniq)
-    titulos=$(wc -l < titles.all.tsv | tr -d ' ')
     for i in $anos;
         do
         numerador=$(cut -f 6 titles.all.tsv | grep -c "$i");
