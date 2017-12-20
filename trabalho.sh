@@ -23,7 +23,7 @@ logo() {
 
 themenu() {
     clear
-    echo `date`
+    echo $(date)
     echo
     logo
     echo
@@ -53,7 +53,7 @@ pre() {
     cd ~-
     echo
     echo ------ FIM DO PRE-PROCESSAMENTO -------
-    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    ELAPSED_TIME=$((SECONDS - START_TIME))
     echo -e "\n\x1b[36mTempo gasto na execucao: ${ELAPSED_TIME}s\x1b[0m"
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
@@ -167,7 +167,7 @@ extrai() {
     echo 11: filmes com genero unico
     # Separa a coluna 9, elimina as linhas que possuem ',' e '\N' sobrando
     # somente os generos unicos e conta as linhas com wc -l
-    cut -f 9 titles.all.tsv | grep -v "," | grep -v '\\N' | wc -l | tr -d ' ' | tee out11
+    cut -f 9 titles.all.tsv | grep -v "," | grep -c -v '\\N' | tee out11
     echo
 
     echo 12: cinco generos com mais titulos
@@ -227,9 +227,9 @@ extrai() {
     echo -e 16: razao de titulos com \"runtimeMinutes\" entre 80\-120min pelo total
     # Atribiu a uma var o valor de linhas encontradas apos selecionar a coluna 8;
     # inverte a busca por "\N" e verificar de a duracao esta em 80-120
-    item16a=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ');
-    item16b=$(cut -f 8 titles.all.tsv | grep -c -v "\\N");
-    bc <<< "scale=5;$item16a / $item16b" | tee out16;
+    numerador=$(cut -f 8 titles.all.tsv | grep -v "\\N" | awk '$NF >= 80 && $NF <= 120' | wc -l | tr -d ' ');
+    denominador=$(cut -f 8 titles.all.tsv | grep -c -v "\\N");
+    bc <<< "scale=5;$numerador / $denominador" | tee out16;
     echo
 
     echo 17: top 10 \"Action\" melhor avaliados desde 2005
@@ -247,7 +247,7 @@ extrai() {
     cd ~-
     echo
     echo -------- FIM DO EXTRACAO --------
-    ELAPSED_TIME=$(($SECONDS - $START_TIME))
+    ELAPSED_TIME=$((SECONDS - START_TIME))
     echo -e "\n\x1b[36mTempo gasto na execucao: ${ELAPSED_TIME}s\x1b[0m"
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
