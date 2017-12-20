@@ -158,9 +158,9 @@ extrai() {
     anos=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | sort | uniq)
     for i in $anos;
         do
-        numerador=$(cut -f 6 titles.all.tsv | grep -c "$i");
-        media=$(bc <<< "scale=5;$numerador / $titulos");
-        echo -e $i"\t"$media | tee -a out10;
+            numerador=$(cut -f 6 titles.all.tsv | grep -c "$i");
+            media=$(bc <<< "scale=5;$numerador / $titulos");
+            echo -e $i"\t"$media | tee -a out10;
         done
     echo
     
@@ -186,10 +186,10 @@ extrai() {
     generos=$(cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq | sort | tr -d [:digit:] | tr -d ' ')
     for i in $generos;
         do
-        numerador=$(awk -F"\t" '{if ($9 ~ /'$i'/){print $10}}' titles.all.tsv | paste -sd+ - | bc);
-        denominador=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i);
-        media=$(bc <<< "scale=5;$numerador / $denominador");
-        echo -e $i" "$media | tee -a out13;
+            numerador=$(awk -F"\t" '{if ($9 ~ /'$i'/){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+            denominador=$(cut -f 9 titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i);
+            media=$(bc <<< "scale=5;$numerador / $denominador");
+            echo -e $i" "$media | tee -a out13;
         done
     echo
 
@@ -198,10 +198,10 @@ extrai() {
     rm -f out14
     for i in $generos;
         do
-        numerador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $10}}' titles.all.tsv | paste -sd+ - | bc);
-        denominador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $9}}' titles.all.tsv | tr ',' '\n' | grep -v '\\N' | grep -c $i);
-        media=$(bc <<< "scale=5;$numerador / $denominador");
-        echo -e $i" "$media | tee -a out14;
+            numerador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+            denominador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $9}}' titles.all.tsv | tr ',' '\n' | grep -v '\\N' | grep -c $i);
+            media=$(bc <<< "scale=5;$numerador / $denominador");
+            echo -e $i" "$media | tee -a out14;
         done
     echo
 
@@ -212,10 +212,10 @@ extrai() {
     titletype=$(cut -f 2 titles.all.tsv | sort | uniq)
     for i in $titletype;
         do
-        numerador=$(awk -F"\t" '{if ($2 == "'$i'"){print $10}}' titles.all.tsv | paste -sd+ - | bc);
-        denominador=$(cut -f 2 titles.all.tsv | grep -c $i);
-        media=$(bc <<< "scale=5;$numerador / $denominador");
-        echo -e $i" "$media | tee -a temp15;
+            numerador=$(awk -F"\t" '{if ($2 == "'$i'"){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+            denominador=$(cut -f 2 titles.all.tsv | grep -c $i);
+            media=$(bc <<< "scale=5;$numerador / $denominador");
+            echo -e $i" "$media | tee -a temp15;
         done
     echo
     cat temp15 | sort -n -r -k2,2
@@ -366,5 +366,5 @@ while true
         4) imprime;;
         0) break;;
         *) invalida;;
-    esac
-done
+        esac
+    done
