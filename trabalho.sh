@@ -218,8 +218,6 @@ extrai() {
             echo -e $i" "$media | tee -a temp15;
         done
     echo
-    cat temp15 | sort -n -r -k2,2
-    echo
     sort -t' ' -k2,2nr temp15 | tee out15
     rm -f temp15
     echo
