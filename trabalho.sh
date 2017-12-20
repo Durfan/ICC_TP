@@ -235,14 +235,14 @@ extrai() {
 
     echo 17: top 10 \"Action\" melhor avaliados desde 2005
     echo
-	# Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 10 primeiros	
-	awk -F"\t" '{if (($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' titles.all.tsv | sort -r -n -t$'\t' -k2,2 | head -n 10 | tr '\t' ' ' | tee out17
-	echo
+    # Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 10 primeiros	
+    awk -F"\t" '{if (($9 ~ /Action/) && ($6 >= 2005 && $6 != "\N") && ($2 ~ /movie/) && ($11 > 100)) print $3,"\t",$10}' titles.all.tsv | sort -r -n -t$'\t' -k2,2 | head -n 10 | tr -d '\t' | tee out17
+    echo
 
     echo 18: top 5 \"Comedy\" melhor avaliados
     echo
-	# Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 5 primeiros	
-	awk -F"\t" '{if ($2 == "movie" && $9 == "Comedy" && $11 > 100 && $8 > 200) print $3,"\t",$10}' titles.all.tsv | sort -r -n -t$'\t' -k2 |  head -n 5 | tr '\t' ' ' | tee out18
+    # Localizar filmes nos devidos parametros, ordenar pela nota dos filmes e extrair os 5 primeiros	
+    awk -F"\t" '{if (($2 == "movie" && $9 ~ /Comedy/) && ($11 > 100 && $8 > 200 && $8 != "\\N")) print $3,"\t",$10}' titles.all.tsv | sort -t$'\t' -k2,2nr |  head -n 5 | tr -d '\t' | tee out18
     echo
 
     cd ~-
@@ -259,7 +259,8 @@ imprime() {
     cd $OUTPUTDIR
     echo -e $LOGO
     echo
-    echo -------- Item 1
+    echo Item 1\:
+    echo
     cat out1
     echo
     echo
@@ -282,20 +283,21 @@ imprime() {
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 10
+    echo Item 10\:
     echo
     head -5 out10
     echo -e " ...\t ..."
     tail -5 out10
-    echo
-    echo -n "Item 11: " ; cat out11
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
 
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 12
+    echo -n "Item 11: " ; cat out11
+    echo
+    echo Item 12\:
+    echo
     cat out12
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
@@ -303,7 +305,7 @@ imprime() {
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 13
+    echo Item 13\:
     echo
     head -15 out13
     echo -e " ..."
@@ -313,7 +315,7 @@ imprime() {
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 14
+    echo Item 14\:
     echo
     head -15 out14
     echo -e " ..."
@@ -323,7 +325,7 @@ imprime() {
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 15
+    echo Item 15\:
     echo
     cat out15
     echo
@@ -334,7 +336,7 @@ imprime() {
     echo
     echo -n "Item 16: " ; cat out16
     echo
-    echo -------- Item 17
+    echo Item 17\:
     echo
     cat out17
     echo
@@ -343,7 +345,7 @@ imprime() {
     clear
     echo -e $LOGO
     echo
-    echo -------- Item 18
+    echo Item 18\:
     echo
     cat out18
     echo
