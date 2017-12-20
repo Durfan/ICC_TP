@@ -174,8 +174,8 @@ extrai() {
     echo 12: cinco generos com mais titulos
     echo
     # Separa a coluna 9, troca ',' por '\n' separando as linhas com mais de um item
-	# faz a ordenação e a contagem de itens iguais, retira o item '\N' da contagem
-	# ordena em ordem decrescente e obtem os 5 primeiros itens
+    # faz a ordenação e a contagem de itens iguais, retira o item '\N' da contagem
+    # ordena em ordem decrescente e obtem os 5 primeiros itens
 	cut -f 9 titles.all.tsv | tr -s "," "\n" | grep -v "\N" | sort | uniq -c | sort -n -r | tr -d [:digit:]' ' | head -n 5 | tee out12
     
     # cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq -c | sort -n -r | tr -d [:digit:] | tr -d ' ' | head -5 | tee out12
