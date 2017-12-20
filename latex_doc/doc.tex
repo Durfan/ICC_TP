@@ -228,6 +228,18 @@ A solução parcial desses itens que seguem a mesma lógica para extração, nã
 #    media13=$(bc <<< "scale=5;$item13 / $total13");
 #    echo -e $i" "$media13 | tee -a out13;
 # done
+
+echo -e "13: media das avaliacoes por titulos > \"genero resultado\""
+cut -f 9 titles.all.tsv | grep -v "\\N" | tr ',' '\n' | sort | uniq -d > generos
+cut -f 10,9 titles.all.tsv | grep -v "\N" > genRates
+#echo $rates	
+for gen in $generos;
+do
+grep $gen genRates | cut -f 2 > rates
+awk '{soma+=$1; tt+=1} END {print soma/tt}' rates >> medias
+done
+echo
+paste -d $'\t' generos medias > medGeneros
 \end{minted}
 
 \subsection*{Item 16}
