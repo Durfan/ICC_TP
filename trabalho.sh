@@ -7,7 +7,7 @@ LOGO="\x1b[36mZEROUM - IMDB Extração e Manuseio v0.0.3\x1b[0m"
 amenu="(1) Pre-Processamento";
 bmenu="(2) Verificar PP";
 cmenu="(3) Extrair itens";
-dmenu="(4) Ver dados extraidos"; 
+dmenu="(4) Ver itens extraidos"; 
 
 invalida() { MSG="\x1b[31mOpcao invalida...\x1b[0m" ; }
 
@@ -125,7 +125,7 @@ extrai() {
     # cut -f 9 titles.all.tsv | grep -v "," | grep -v "\\N" | sort | uniq | wc -l | tr -d ' ' | tee out5
 
     # Patch para correcao da resposta
-    cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -c -v '\\N'
+    cut -f 9 titles.all.tsv | tr ',' '\n' | sort | uniq | grep -c -v '\\N' | tee out5
     echo
     
     echo 06: titulos classificados como \"Action\"
@@ -153,6 +153,8 @@ extrai() {
     echo
 
     echo 10: razao de titulos produzidos entre 1971-2016 pelo total
+    echo
+    rm -f out10
     anos=$(cut -f 6 titles.all.tsv | awk '$NF >= 1971 && $NF <= 2016' | sort | uniq)
     titulos=$(wc -l < titles.all.tsv | tr -d ' ')
     for i in $anos;
@@ -180,6 +182,8 @@ extrai() {
     echo
     
     echo 13: media das avaliacoes \(total.aval.genero\/titulos genero\)
+    echo
+    rm -f out13
     generos=$(cut -f 9 titles.all.tsv | tr ',' '\n' | sort | grep -v '\\N' | uniq | sort | tr -d [:digit:] | tr -d ' ')
     for i in $generos;
         do
@@ -190,17 +194,36 @@ extrai() {
         done
     echo
 
-    echo 14: media das avaliacoes \(total.aval.genero\/titulos genero\) 
+    echo 14: media das avaliacoes \(total.aval.genero\/titulos genero\)
+    echo
+    rm -f out14
     for i in $generos;
         do
         numerador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $10}}' titles.all.tsv | paste -sd+ - | bc);
-        denominador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $9}}' titles.all.tsv | tr ',' '\n' | grep -v '\\N' | sort | grep -c $i);
+        denominador=$(awk -F"\t" '{if ($9 ~ /'$i'/ && $11 > 100){print $9}}' titles.all.tsv | tr ',' '\n' | grep -v '\\N' | grep -c $i);
         media=$(bc <<< "scale=5;$numerador / $denominador");
         echo -e $i" "$media | tee -a out14;
         done
     echo
 
-    echo -e "15: media das avaliacoes por tı́tulos > \"tipo resultado\"\n"
+    echo 15: media das avaliacoes titleType \(total.aval.titletype\/titulos titletye\)
+    echo
+    rm -f temp15
+    rm -f out15
+    titletype=$(cut -f 2 titles.all.tsv | sort | uniq)
+    for i in $titletype;
+        do
+        numerador=$(awk -F"\t" '{if ($2 == "'$i'"){print $10}}' titles.all.tsv | paste -sd+ - | bc);
+        denominador=$(cut -f 2 titles.all.tsv | grep -c $i);
+        media=$(bc <<< "scale=5;$numerador / $denominador");
+        echo -e $i" "$media | tee -a temp15;
+        done
+    echo
+    cat temp15 | sort -n -r -k2,2
+    echo
+    sort -t' ' -k2,2nr temp15 | tee out15
+    rm -f temp15
+    echo
 
     echo -e 16: razao de titulos com \"runtimeMinutes\" entre 80\-120min pelo total
     # Atribiu a uma var o valor de linhas encontradas apos selecionar a coluna 8;
@@ -239,7 +262,9 @@ imprime() {
     echo -------- Item 1
     cat out1
     echo
+    echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
     clear
     echo -e $LOGO
     echo
@@ -251,10 +276,22 @@ imprime() {
     echo -n " Item 7: " ; cat out7
     echo -n " Item 8: " ; cat out8
     echo -n " Item 9: " ; cat out9
-    echo -n "Item 11: " ; cat out11
-    echo -n "Item 16: " ; cat out16
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
+    clear
+    echo -e $LOGO
+    echo
+    echo -------- Item 10
+    echo
+    head -5 out10
+    echo -e " ...\t ..."
+    tail -5 out10
+    echo
+    echo -n "Item 11: " ; cat out11
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
     clear
     echo -e $LOGO
     echo
@@ -262,14 +299,47 @@ imprime() {
     cat out12
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
     clear
     echo -e $LOGO
+    echo
+    echo -------- Item 13
+    echo
+    head -15 out13
+    echo -e " ..."
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
+    clear
+    echo -e $LOGO
+    echo
+    echo -------- Item 14
+    echo
+    head -15 out14
+    echo -e " ..."
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
+    clear
+    echo -e $LOGO
+    echo
+    echo -------- Item 15
+    echo
+    cat out15
+    echo
+    read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
+    clear
+    echo -e $LOGO
+    echo
+    echo -n "Item 16: " ; cat out16
     echo
     echo -------- Item 17
     echo
     cat out17
     echo
     read -n 1 -s -r -p "Pressione qualquer tecla para continuar..."
+
     clear
     echo -e $LOGO
     echo
