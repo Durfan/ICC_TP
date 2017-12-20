@@ -3,7 +3,7 @@
 IMDBDIR=$1
 OUTPUTDIR=$2
 
-LOGO="\x1b[36mZEROUM - IMDB Extração e Manuseio v0.0.3\x1b[0m"
+LOGO="\x1b[36mZEROUM - IMDB Extração e Manuseio v0.0.4\x1b[0m"
 amenu="(1) Pre-Processamento";
 bmenu="(2) Verificar PP";
 cmenu="(3) Extrair itens";
