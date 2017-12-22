@@ -1,4 +1,5 @@
-# Trabalho Final de ICC (2017/2) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fc48a6d726144b6bbc021c0f43b8c647)](https://www.codacy.com/app/Durfan/ICC_TP?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Durfan/ICC_TP&amp;utm_campaign=Badge_Grade)
+# Trabalho Final de ICC (2017/2)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fc48a6d726144b6bbc021c0f43b8c647)](https://www.codacy.com/app/Durfan/ICC_TP?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Durfan/ICC_TP&amp;utm_campaign=Badge_Grade)
 
 Extração e manuseio de base de dados através de programação em bash.
 
