@@ -1,6 +1,3 @@
-
 .DS_Store
-IMDB/title.basics.tsv
-IMDB/title.ratings.tsv
 *.tsv
 *.txt
