@@ -12,13 +12,13 @@ Extração e manuseio de base de dados através de programação em bash.
 ### Installing
 
 Shell:
-```
+```bash
 $bash trabalho.sh <INPUTDIR> <OUTPUTDIR>
 ```
 
 ## Deployment
 
-```
+```bash
 <OUTPUTDIR>
 ```
 
