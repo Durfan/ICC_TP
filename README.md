@@ -1,6 +1,4 @@
 # Trabalho Prático de ICC (2017/2)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fc48a6d726144b6bbc021c0f43b8c647)](https://www.codacy.com/app/Durfan/ufsj-icc-tp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Durfan/ufsj-icc-tp&amp;utm_campaign=Badge_Grade)
-[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/Durfan/my-stack)
 
 Extração e manuseio de base de dados através de programação em bash.
 
